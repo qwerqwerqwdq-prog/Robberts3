@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Род Роббертсов — Первые Дуксы Центроземья</title>
+<meta name="description" content="Интерактивное родовое древо Роббертсов: восемь поколений, семь линий, династии Кадас и Сар — с летописью, родством и топом достижений.">
+<meta name="theme-color" content="#14110c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='6.5' y='6.5' width='11' height='11' fill='%23c8a565' transform='rotate(45 12 12)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14110c; --panel:#1b1712; --card:#1e1a14; --card2:#251f18;
+    --text:#f0e8d6; --muted:#b0a489; --faint:#787059;
+    --hair:rgba(255,255,255,.09); --accent:#c8a565;
+    --cw:186px; --ch:64px;
+    --hh:calc(60px + env(safe-area-inset-top,0px));
+    --sab:env(safe-area-inset-bottom,0px); --sal:env(safe-area-inset-left,0px); --sar:env(safe-area-inset-right,0px);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+  body{
+    position:fixed;inset:0;width:100%;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;
+    background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:14px;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;font-optical-sizing:auto;
+    font-feature-settings:"kern" 1,"liga" 1;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+  @keyframes fin{from{opacity:0}to{opacity:1}}
+
+  header{position:fixed;inset:0 0 auto 0;height:var(--hh);z-index:50;display:flex;align-items:center;gap:22px;padding:env(safe-area-inset-top,0px) 20px 0;background:var(--panel);border-bottom:1px solid var(--hair);animation:rise .7s cubic-bezier(.22,.8,.3,1) both}
+  .brand{display:flex;align-items:center;gap:13px;min-width:0}
+  .mark{width:27px;height:27px;flex:none;border:1px solid var(--accent);border-radius:5px;transform:rotate(45deg);display:grid;place-items:center}
+  .mark span{transform:rotate(-45deg);font-family:'Cormorant Garamond',serif;font-weight:700;font-size:16px;color:var(--accent);line-height:1}
+  .brand-title{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:18px;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}
+  .brand-sub{font-size:10px;letter-spacing:.09em;color:var(--faint);margin-top:2px;white-space:nowrap}
+  .top-stats{display:flex;gap:22px;margin-left:auto}
+  .stat{text-align:right}
+  .stat b{display:block;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:19px;line-height:1;color:var(--accent)}
+  .stat i{font-style:normal;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+  .top-actions{display:flex;align-items:center;gap:11px;margin-left:auto}
+  .top-stats + .top-actions{margin-left:0}
+
+  .search-wrap{position:relative}
+  .search-box{display:flex;align-items:center;gap:8px;width:200px;height:34px;padding:0 12px;background:rgba(255,255,255,.04);border:1px solid var(--hair);border-radius:8px;transition:border-color .25s,width .25s}
+  .search-box:focus-within{border-color:var(--accent);width:260px}
+  .search-box svg{flex:none;stroke:var(--faint)}
+  .search-box input{flex:1;min-width:0;background:none;border:none;outline:none;color:var(--text);font-family:inherit;font-size:13px}
+  .search-box input::placeholder{color:var(--faint)}
+  .search-drop{position:absolute;top:40px;left:0;right:0;z-index:60;background:var(--card);border:1px solid var(--hair);border-radius:10px;box-shadow:0 14px 34px rgba(0,0,0,.5);overflow:hidden;display:none;max-height:320px;overflow-y:auto}
+  .search-drop.open{display:block}
+  .s-item{display:flex;align-items:center;gap:10px;width:100%;padding:8px 13px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.05);color:var(--text);font-family:inherit;cursor:pointer;text-align:left}
+  .s-item:last-child{border-bottom:none}
+  .s-dot{width:7px;height:7px;flex:none;transform:rotate(45deg)}
+  .s-name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:15px;white-space:nowrap}
+  .s-meta{margin-left:auto;font-size:10px;color:var(--faint);white-space:nowrap}
+  .s-empty{padding:11px 14px;font-size:12px;color:var(--faint)}
+
+  .ghost-btn{height:34px;padding:0 14px;background:none;border:1px solid var(--hair);border-radius:8px;color:var(--muted);font-family:inherit;font-size:12px;font-weight:500;letter-spacing:.04em;cursor:pointer;white-space:nowrap;transition:border-color .25s,color .25s}
+  .ghost-btn .bt-ico{display:none}
+
+  #viewport{position:fixed;inset:var(--hh) 0 0 0;overflow:hidden;cursor:grab;touch-action:none;background-image:radial-gradient(rgba(200,165,101,.05) 1px,transparent 1px);background-size:26px 26px}
+  #viewport.grabbing{cursor:grabbing}
+  /* полотно древа полностью не выделяется: ни карточки, ни фоновые подписи */
+  #stage{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;
+    user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none}
+  #links{position:absolute;left:0;top:0;overflow:visible;shape-rendering:geometricPrecision}
+
+  .node{position:absolute;left:0;top:0;width:var(--cw);transition:opacity .35s ease;
+    user-select:none;-webkit-user-select:none}
+  .node.dim{opacity:.14}
+  .card{height:var(--ch);padding:9px 12px 10px;display:flex;flex-direction:column;gap:3px;
+    background:linear-gradient(180deg,rgba(255,255,255,.015),rgba(255,255,255,0) 40%),var(--card);
+    border:1px solid #3d372c;border-left:3px solid var(--bc,#55503f);border-radius:6px;cursor:pointer;overflow:hidden;
+    transition:opacity .55s ease,transform .55s cubic-bezier(.22,.8,.3,1),border-color .25s,background .25s,box-shadow .25s}
+  .card.pre{opacity:0;transform:translateY(12px)}
+  .card.spouse{background:#1a1611}
+  @media (hover:hover){
+    .card:hover{border-color:var(--bc,#55503f);background:var(--card2)}
+    .ghost-btn:hover{border-color:var(--accent);color:var(--text)}
+    .p-link:hover .pl-name{color:var(--accent)}
+    .panel-close:hover{border-color:var(--accent);color:var(--text)}
+    .p-locate:hover{border-color:var(--accent);color:var(--text)}
+    .s-item:hover, .s-item.active{background:rgba(200,165,101,.09)}
+    #zoomer button:hover{color:var(--text);background:var(--card2)}
+  }
+  .node.sel .card{border-color:var(--bc,#55503f);background:var(--card2);box-shadow:0 0 0 1px var(--bc,#55503f),0 8px 22px rgba(0,0,0,.45)}
+  .c-name{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:16px;line-height:1.12;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .c-sub{font-size:9.5px;letter-spacing:.05em;color:var(--muted);margin-top:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .s-name{overflow:hidden;text-overflow:ellipsis}
+
+  .chip{position:absolute;left:0;top:0;min-width:26px;height:26px;padding:0 8px;display:grid;place-items:center;border-radius:99px;cursor:pointer;background:var(--card);border:1px solid var(--bc,#55503f);color:var(--muted);font-family:'Manrope',sans-serif;font-size:11px;font-weight:600;transition:opacity .5s ease,background .25s,color .25s;user-select:none;-webkit-user-select:none}
+  .chip.pre{opacity:0}
+  .chip.open{background:var(--bc,#55503f);color:#14110c}
+
+  /* фоновые подписи: не выделяются и не перехватывают перетаскивание */
+  .glabel,.bracket,.stublabel{user-select:none;-webkit-user-select:none;-moz-user-select:none;pointer-events:none}
+  .glabel{position:absolute;font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  .bracket{position:absolute;width:1px;background:rgba(255,255,255,.12)}
+  /* визуальное разделение поколений: вертикальная пунктирная граница + вертикальная подпись в зазоре между колонками */
+  .genline{position:absolute;width:0;border-left:1px dashed rgba(200,165,101,.16);pointer-events:none}
+  .genlabel{position:absolute;writing-mode:vertical-rl;transform:translate(-50%,-50%);font-size:9px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:rgba(200,165,101,.6);background:#14110c;border:1px solid rgba(200,165,101,.32);border-radius:5px;padding:10px 3px;pointer-events:none;white-space:nowrap;box-shadow:0 0 0 5px #14110c,0 2px 12px rgba(0,0,0,.45)}
+  /* всплывающая сводка по ветви убрана по решению владельца — излишество */
+  .stublabel{position:absolute;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11px;color:var(--faint);white-space:nowrap;transition:opacity .35s}
+  .late{animation:fin .7s .9s both}
+
+  .ln{fill:none;stroke-width:1.5;stroke-opacity:.5;stroke-linecap:round;transition:stroke-opacity .35s,stroke-width .35s;shape-rendering:geometricPrecision}
+  .ln.hl{stroke-opacity:1;stroke-width:2.5}
+  .ln.dimline{stroke-opacity:.07}
+  .ln.stub{stroke-dasharray:4 5;stroke-opacity:.45}
+  .ln.prev{stroke-dasharray:4 5;stroke-opacity:.4}
+  /* нить династии: отец супруги из клана → её карточка (сплошная, цвет династии) */
+  .ln.clan{stroke-width:2;stroke-opacity:.85}
+  .dia{transition:opacity .35s}
+  .dimmed{opacity:.12}
+
+  #legend{position:fixed;left:calc(16px + var(--sal));bottom:calc(16px + var(--sab));z-index:40;max-width:290px;padding:13px 16px;background:rgba(20,17,13,.88);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--hair);border-radius:10px;animation:rise .7s .25s cubic-bezier(.22,.8,.3,1) both}
+  #legend h4{font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:9px}
+  .lg-row{display:flex;align-items:center;gap:9px;font-size:10.5px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .lg-line{width:15px;height:0;flex:none;border-top:2px solid}
+  .lg-r{width:7px;height:7px;flex:none;transform:rotate(45deg);background:var(--accent)}
+  .lg-ro{width:7px;height:7px;flex:none;transform:rotate(45deg);background:var(--bg);border:1px solid var(--faint)}
+  .lg-motto{margin-top:10px;padding-top:9px;border-top:1px solid var(--hair);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--accent)}
+  .lg-blood{margin-top:7px;font-size:10px;line-height:1.55;color:var(--muted)}
+  .lg-blood b{color:var(--accent);font-weight:600}
+  .lg-date{margin-top:6px;font-size:9.5px;letter-spacing:.03em;color:var(--faint);line-height:1.5}
+
+  #hint{position:fixed;right:calc(16px + var(--sar));bottom:calc(66px + var(--sab));z-index:40;padding:8px 13px;background:rgba(20,17,13,.88);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--hair);border-radius:8px;font-size:10px;letter-spacing:.03em;color:var(--faint);animation:rise .7s .35s cubic-bezier(.22,.8,.3,1) both;transition:right .45s cubic-bezier(.22,.8,.3,1)}
+  @media (min-width:761px){
+    body:has(#panel.open) #zoomer{right:calc(366px + var(--sar))}
+    body:has(#panel.open) #hint{right:calc(366px + var(--sar))}
+  }
+  #zoomer{position:fixed;right:calc(16px + var(--sar));bottom:calc(16px + var(--sab));z-index:40;display:flex;align-items:center;gap:2px;padding:5px 9px;background:rgba(27,23,18,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--hair);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.45);animation:rise .7s .3s cubic-bezier(.22,.8,.3,1) both;transition:right .45s cubic-bezier(.22,.8,.3,1)}
+  #zoomer button{width:32px;height:32px;flex:none;display:grid;place-items:center;background:none;border:none;border-radius:8px;color:var(--muted);cursor:pointer;transition:color .2s,background .2s}
+  #zSlider{-webkit-appearance:none;appearance:none;width:112px;height:30px;margin:0;background:transparent;cursor:pointer}
+  #zSlider::-webkit-slider-runnable-track{height:3px;border-radius:2px;background:linear-gradient(90deg,rgba(200,165,101,.12),rgba(200,165,101,.55))}
+  #zSlider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;margin-top:-5.5px;border-radius:50%;background:var(--accent);border:none;box-shadow:0 0 0 3px rgba(20,17,12,.85)}
+  #zSlider::-moz-range-track{height:3px;border-radius:2px;background:linear-gradient(90deg,rgba(200,165,101,.12),rgba(200,165,101,.55))}
+  #zSlider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);border:none;box-shadow:0 0 0 3px rgba(20,17,12,.85)}
+  #zVal{min-width:40px;text-align:center;font-size:10px;font-weight:600;letter-spacing:.04em;color:var(--muted);font-variant-numeric:tabular-nums}
+  #legendToggle{display:none;position:fixed;left:calc(14px + var(--sal));bottom:calc(14px + var(--sab));z-index:41;width:42px;height:42px;place-items:center;background:rgba(27,23,18,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid var(--hair);border-radius:50%;color:var(--accent);cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.45)}
+
+  #panel{position:fixed;top:var(--hh);right:0;bottom:0;width:350px;z-index:45;background:var(--panel);border-left:1px solid var(--hair);padding:28px 26px 40px;overflow-y:auto;transform:translateX(105%);transition:transform .45s cubic-bezier(.22,.8,.3,1)}
+  #panel.open{transform:none}
+  #panel::before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);width:44px;height:4px;border-radius:2px;background:#3a342a;display:none}
+  #panel::-webkit-scrollbar{width:8px}
+  #panel::-webkit-scrollbar-thumb{background:#3a342a;border-radius:4px}
+  .panel-close{position:absolute;top:13px;right:13px;width:28px;height:28px;display:grid;place-items:center;background:none;border:1px solid var(--hair);border-radius:99px;color:var(--muted);cursor:pointer;transition:border-color .25s,color .25s}
+  .p-kicker{font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-bottom:11px;padding-right:30px}
+  .p-name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px;line-height:1.1}
+  .p-sub{font-size:11.5px;letter-spacing:.07em;color:var(--muted);margin-top:6px}
+  .p-death{display:flex;gap:11px;align-items:flex-start;margin-top:14px;padding:10px 13px;background:rgba(173,104,90,.09);border:1px solid rgba(173,104,90,.26);border-left:3px solid #a96a58;border-radius:8px}
+  .p-death .pd-ic{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:19px;line-height:1;color:#c08a76;margin-top:2px}
+  .p-death .pd-body{min-width:0}
+  .p-death .pd-l{display:block;font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#b98d7d;margin-bottom:3px}
+  .p-death .pd-t{display:block;font-size:12.5px;line-height:1.5;color:var(--text)}
+  .p-div{position:relative;height:1px;background:var(--hair);margin:20px 0}
+  .p-div::after{content:'';position:absolute;left:50%;top:50%;width:6px;height:6px;transform:translate(-50%,-50%) rotate(45deg);background:var(--accent)}
+  .p-section{margin-bottom:20px}
+  .p-label{font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+  .p-link{display:flex;align-items:baseline;gap:8px;width:100%;padding:5px 0;background:none;border:none;color:var(--text);font-family:inherit;cursor:pointer;text-align:left;border-bottom:1px solid rgba(255,255,255,.04)}
+  .pl-dot{width:6px;height:6px;flex:none;transform:rotate(45deg);align-self:center}
+  .pl-name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:15.5px;transition:color .2s}
+  .pl-sub{font-size:10px;color:var(--faint);margin-left:auto;white-space:nowrap}
+  .p-note{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:16px;line-height:1.55;color:var(--muted)}
+  .p-note + .p-note{margin-top:9px}
+  .p-locate{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:38px;margin-top:4px;background:none;border:1px solid var(--hair);border-radius:8px;color:var(--muted);font-family:inherit;font-size:12px;letter-spacing:.05em;cursor:pointer;transition:border-color .25s,color .25s}
+  .kin-box{margin:4px 0 18px;padding:12px 14px;background:rgba(200,165,101,.06);border:1px solid rgba(200,165,101,.25);border-left:3px solid var(--accent);border-radius:8px}
+  .kin-row{display:flex;align-items:baseline;gap:8px;min-width:0}
+  .kin-row + .kin-row{margin-top:7px}
+  .kin-name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kin-sep{flex:none;color:var(--faint)}
+  .kin-rel{flex:none;margin-left:auto;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--accent);text-align:right}
+
+  /* топ достижений мирового масштаба — секция летописи */
+  .top-box{padding:2px 12px;background:rgba(200,165,101,.05);border:1px solid rgba(200,165,101,.22);border-radius:10px}
+  .top-item{display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+  .top-item:last-child{border-bottom:none}
+  .top-rank{flex:none;width:21px;height:21px;margin-top:1px;display:grid;place-items:center;border-radius:50%;font-size:10.5px;font-weight:700;color:#14110c;background:linear-gradient(135deg,#eed9a8,#c8a565)}
+  .top-rank.r2{background:linear-gradient(135deg,#e6e9ef,#9aa4b4)}
+  .top-rank.r3{background:linear-gradient(135deg,#eec49a,#b0764a)}
+  .top-rank-x{background:none;border:1px solid rgba(200,165,101,.45);color:var(--accent);font-size:9px}
+  .top-body{min-width:0}
+  .top-name{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:15.5px;line-height:1.25}
+  .top-who{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-top:3px;opacity:.85}
+  .top-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14.5px;line-height:1.5;color:var(--muted);margin-top:4px}
+  .top-name.lnk{cursor:pointer;color:#eed9a8;transition:color .2s ease}
+  .top-name.lnk:hover{color:var(--accent);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(200,165,101,.55)}
+  /* дуги помолвок */
+  .ln.eng{stroke-dasharray:3 7;opacity:.8}
+  .engring circle{fill:none;stroke:#c8a565;stroke-width:1.3;opacity:.9}
+  /* пересборка текста после зума: прозрачный outline инвалидирует отрисовку — Chromium
+     перерастеряет текст в актуальном масштабе (лечение «мыла» на сильном приближении) */
+  #stage.repaint .card, #stage.repaint .glabel, #stage.repaint .stublabel, #stage.repaint .chip, #stage.repaint .genlabel, #stage.repaint .genline{outline:1px solid transparent}
+
+  @media (max-width:1150px){.top-stats{display:none}}
+  @media (max-width:760px){
+    :root{--hh:calc(52px + env(safe-area-inset-top,0px))}
+    .brand{cursor:pointer}
+    .brand-sub{display:none}
+    header{gap:10px;padding:env(safe-area-inset-top,0px) 10px 0}
+    .brand-title{font-size:15px;letter-spacing:.1em}
+    .top-actions{flex:1;min-width:0;gap:7px}
+    .search-wrap{flex:1;min-width:0;position:static}
+    .search-box{width:100%;height:36px}
+    .search-box:focus-within{width:100%}
+    .search-box input{font-size:16px}
+    .search-drop{position:fixed;top:calc(var(--hh) + 6px);left:10px;right:10px;max-height:56vh}
+    .ghost-btn{width:36px;height:36px;padding:0;display:grid;place-items:center;flex:none}
+    .ghost-btn .bt-label{display:none}
+    .ghost-btn .bt-ico{display:block}
+    #btnFounder,#btnTop{display:none}
+    #panel{top:auto;left:0;right:0;bottom:0;width:100%;max-height:74vh;border-left:none;border-top:1px solid var(--hair);border-radius:16px 16px 0 0;padding:22px 18px calc(26px + var(--sab));transform:translateY(108%);box-shadow:0 -18px 44px rgba(0,0,0,.55)}
+    #panel.open{transform:none}
+    #panel::before{display:block}
+    .panel-close{top:10px;right:10px;width:32px;height:32px;background:var(--card)}
+    .p-name{font-size:22px}
+    #legend{left:12px;right:12px;bottom:calc(66px + var(--sab));max-width:none;animation:none;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .3s ease,transform .3s ease}
+    #legend.open{opacity:1;transform:none;pointer-events:auto}
+    #legendToggle{display:grid}
+    #hint,#legend .lg-date{display:none}
+    #zoomer{right:calc(10px + var(--sar));bottom:calc(10px + var(--sab));gap:1px;padding:4px 7px}
+    #zSlider{width:84px}
+    #zVal{min-width:36px;font-size:9px}
+  }
+  @media (pointer:coarse){
+    .chip{min-width:30px;height:30px;font-size:12px}
+    #zoomer button{width:38px;height:38px}
+    .panel-close{width:34px;height:34px}
+    .p-link{padding-top:9px;padding-bottom:9px}
+    .s-item{padding-top:10px;padding-bottom:10px}
+    .p-locate{height:44px}
+  }
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .search-box input:focus-visible{outline:none}
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="mark"><span>Р</span></div>
+    <div>
+      <div class="brand-title">Род Роббертсов</div>
+      <div class="brand-sub">Первые Дуксы Центроземья · летопись дома</div>
+    </div>
+  </div>
+  <div class="top-stats" id="stats"></div>
+  <div class="top-actions">
+    <div class="search-wrap">
+      <div class="search-box">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="search" type="text" placeholder="Найти в роду…" autocomplete="off">
+      </div>
+      <div class="search-drop" id="searchDrop"></div>
+    </div>
+    <button class="ghost-btn" id="btnExpand" title="Развернуть всё"><svg class="bt-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 3H3v6M15 3h6v6M9 21H3v-6M15 21h6v-6"/></svg><span class="bt-label">Развернуть всё</span></button>
+    <button class="ghost-btn" id="btnFounder">Летопись основателя</button>
+    <button class="ghost-btn" id="btnTop">Топ достижений</button>
+  </div>
+</header>
+
+<main id="viewport">
+  <div id="stage"><svg id="links"></svg></div>
+</main>
+
+<aside id="legend">
+  <h4>Как читать древо</h4>
+  <div class="lg-row"><span class="lg-line" style="border-color:#8a93a6"></span>приёмные дети</div>
+  <div class="lg-row"><span class="lg-line" style="border-color:#7f9779"></span>династия Кадас</div>
+  <div class="lg-row"><span class="lg-line" style="border-color:#8b7fa8"></span>династия Сар</div>
+  <div class="lg-row"><span class="lg-line" style="border-color:#c8a565"></span>сыновья</div>
+  <div class="lg-row"><span class="lg-line" style="border-color:#c68363"></span>дочери</div>
+  <div class="lg-row"><span class="lg-line" style="border-color:#6e6552;border-top-style:dashed"></span>прежние браки</div>
+  <div class="lg-row"><span class="lg-line" style="border-color:#c8a565;border-top-style:dashed"></span>помолвка родичей · кольца на дуге</div>
+  <div class="lg-row"><span class="lg-r"></span>ромб — союз пары &nbsp;·&nbsp; <span class="lg-ro" style="margin:0 -2px"></span>&nbsp;пустой — род продолжится</div>
+  <div class="lg-row">число в кружке — свёрнутая ветвь, клик разворачивает</div>
+  <div class="lg-motto">«Мы сможем всё» — девиз дома · символ — Золотая Щука</div>
+  <div class="lg-blood"><b>Сильная кровь</b> — у всех родных Роббертсов: магический потенциал, жизнь до двух веков (как правило от полутора), сильна магия крови. Вблизи, до пары километров, родня говорит псионически.</div>
+  <div class="lg-date">Сейчас: Первый день, Первая неделя, Первый месяц · 19.769 год от пробуждения Оркена · 679 Ход (271 по новому календарю)</div>
+</aside>
+
+<button id="legendToggle" aria-label="Как читать древо"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 11.5V16"/></svg></button>
+
+<div id="zoomer">
+  <button id="zOut" aria-label="Отдалить"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+  <input id="zSlider" type="range" min="0" max="1000" step="1" value="500" aria-label="Масштаб">
+  <button id="zIn" aria-label="Приблизить"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+  <span id="zVal">100%</span>
+  <button id="zFit" aria-label="Вписать в экран" title="Вписать в экран"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg></button>
+</div>
+
+<div id="hint">Колесо или ползунок — масштаб · перетаскивание — перемещение · двойной клик — приблизить · клик по плитке — летопись</div>
+
+<aside id="panel"></aside>
+
+<script>
+/* ═══════════ 1. ДАННЫЕ РОДА ═══════════ */
+
+const GROUPS = {
+  root:     { name:'Основатели', color:'#c8a565' },
+  adopted:  { name:'Приёмные',   color:'#8a93a6' },
+  sons:     { name:'Сыновья',    color:'#c8a565' },
+  daughters:{ name:'Дочери',     color:'#c68363' },
+  kadas:    { name:'Кадасы',     color:'#7f9779' },
+  sar:      { name:'Сары',       color:'#8b7fa8' }
+};
+const SPOUSE_COLOR = '#4a4336';
+
+const WILLIAM_NOTE = [
+  'Сын Диалтона, внук безфамильного Робберта. Начинал смотрителем кладбища и открыл при нём детский дом, где дети получали знания — это было тёмное время. Был репрессирован правителем Яльвы по надуманному поводу — со слов приёмных детей. Прошёл путь от садовника до главы образования, обучал детей знатных домов. Писал книги — одни успешные, другие нет.',
+  'Остаток жизни провёл в архивах и бюрократии, вдали от родных, отправляя им жалованье. Пал в Покирстоде — в один день с сыном Родни — и был похоронен на месте работы.'
+];
+const WILLIAM_TESTAMENT = 'Роббертсы чтят самопожертвование основателя, держатся друг друга и не враждуют. Многие ушли насильственной смертью — это их проклятье. Но сильная кровь позволила многим изменить свою судьбу: каждый из потомков идёт путём, который выбрал сам, — без денежных и социальных невзгод.';
+const IDEA_NOTE = 'Позднейшая идея рода: объединить все линии воедино и взрастить Сильнейшего Роббертса — существо с огромными способностями. К нашему дню линии соединяются: Бенджаминиды с Грегаридами (Марк), Тарренсиды со Стивенсидами (Егория), Мануэлиды с Родридами (Гий), Джейсониды с Гэрридами (Джикия), Долиды с Мэридами (Гум), Бертиды с Артуридами (Ерорий), Лореттиды с Ширлитидами (Дэниэла). Баттлериды же остаются изгоями общего движения — единственные кровные Роббертсы в Яльве, которую прочие линии презирают по заветам основателя, — хотя именно Роббертсы там правят.';
+
+/* причины смерти — только то, что летопись утверждает прямо; показывается в карточке */
+const DEATHS = {
+  william:  'Пал в Покирстоде — в один день с сыном Родни; похоронен на месте работы',
+  rodney:   'Нападение животного в одном из первых странствий',
+  benjamin: 'Продолжительная магическая болезнь, которой его заразили подгорьцы',
+  gregari:  'Утонул, спасаясь бегством от войска Теодора Кеджина',
+  george:   'Пал в одном из междоусобных конфликтов',
+  jason:    'Магическое истощение — чрезмерная трата магии',
+  dol:      'Погиб на бугуртах — ещё при жизни отца, мечтавшего о его рыцарской славе',
+  eirik:    'Пал в экспедиции на Южном континенте',
+  arthur:   'Не перенёс тоски по Покирстодовым землям; эльфы прощались с ним несколько недель',
+  ihael:    'Тоскливая эпидемия, обрушившаяся на мужскую часть Артуридов',
+  gabriel:  'Тоскливая эпидемия Артуридов — пал вместе с мужской частью линии',
+  rifael:   'Тоскливая эпидемия Артуридов',
+  muriel:   'Тоскливая эпидемия Артуридов',
+  raguel:   'Тоскливая эпидемия Артуридов',
+  buttler:  'Пал иронично: случайно упал с коня по дороге домой — после завершения карьеры наёмника',
+  dirty:    'Пал в сражениях с островитянскими войсками',
+  berta:    'Пала в ходе интриг',
+  bertn:    'Пал вместе с отцом Торном в бою за страну Келиев',
+  arnold:   'Пал на скачках',
+  loretta:  'Пала в одном из набегов вражеского войска',
+  shirley3: 'Наследственная болезнь линии — как и Егор',
+  egor:     'Наследственная болезнь Ширлитидов',
+  petrk:    'Болезнь — пал годом раньше жены',
+  francisk: 'Болезнь — ушла в другой день, чем муж: за одну зиму замок потерял обоих хозяев',
+  andres:   'Болезнь — пал годом раньше жены',
+  alexsandr:'Болезнь — пережила мужа недолгий срок',
+
+  /* дополнено: прочие умершие; «Неизвестно» — если летопись не даёт причины даже косвенно */
+  jacob:    'Последствия смертельного облака яда в Битве за Апостольск: выжил чудом Покирстодова, но тело слабло день за днём — умер в соборе после службы',
+  robbert:  'Неизвестно',
+  dialton:  'Неизвестно',
+  unknownw: 'Неизвестно',
+  kadash:   'Неизвестно',
+  sarh:     'Неизвестно',
+  kadas:    'Неизвестно',
+  ofelia:   'Неизвестно',
+  gregd:    'Неизвестно',
+  dumbal:   'Неизвестно',
+  seriel:   'Тоскливая эпидемия Артуридов',
+  friedrich:'Неизвестно',
+  eleonora: 'Неизвестно',
+  andre:    'Неизвестно',
+  victor:   'Пал в бою',
+  vada:     'Пала в бою',
+  petro:    'Неизвестно',
+  vuala:    'Неизвестно',
+  margaretw:'Неизвестно'
+};
+
+/* топ достижений мирового масштаба — отдельная секция летописи основателя */
+const TOP_ACHIEVEMENTS = [
+  { id:'leonard', who:'Леонард Роббертс', title:'Царь Центроземья «Великий»',
+    text:'Монах → основатель Покирстодской Инспекции → бессменный Саккеларий → 5/6/7-й Казилин → Царь Центроземья. Писание Роббертсов об 11 заповедях, Принципы Инспекции (без пыток, презумпция невиновности, автономия), мирная дипломатия и прощение обидчиков, облагораживание территорий — и знаменитые справки, впервые собравшие воедино судьбу всех семи линий рода. Провёл через Сдерживающий Совет полный запрет рабства в Яльве — без единого исключения: даже покупка рабов «с целью освобождения» отныне считается работорговлей; судить дуксов по таким делам поставлены Совет Прониаров и Турмархов — с учётом заслуг перед державой.' },
+  { id:'jacob', who:'Джейкоб I Роббертс', title:'XI Патриарх всея Покирстодовых земель',
+    text:'От наёмника и паладина — через Командора Ордена — до XI Патриарха; Дукс Территории Апостолов, регент Окурка, Праведник Дорог, Вождь Сухопутных путей. Символ Сражения за Апостольск: тяжёлое ранение и отравление не сломили; выкуп из баббахистского плена — 8 000 000 дененов; реорганизация Святого Ордена и мир с Роудом Вальтером — «Да будет мир». Вклад в Тронийский банк: 750 000 дененов под 10 % годовых.' },
+  { id:'alfrey', who:'Альфрей I Мерс', title:'Регент Накрая · полководец Яльвы',
+    text:'Возглавил бунт против самовластия Квилианы Зенской с 9 900 войсками — и победил: добился власти в Дукате и разделил его, посадив в частях угодных. Священство Квила объединено с Закзенами под его регентством, Вальзенберия объявлена особой территорией по клятве дяде Леонарду. После истребления военной верхушки Яльвы — один из двух оставшихся полководцев державы.' },
+  { id:'galiana', who:'Гальяна Роббертс', title:'Четвёртый Казилин · автор ГЭП',
+    text:'Гальянская Экономическая Политика на 25,2 млн дененов с 5-летним перемирием; пережила покушение и плен в Корлене, публично заявила о разводе с эмиром — и после 1 года 4 месяцев правления ушла в путешествие, заняв третье место в топе правителей.' },
+  { id:'giiy', who:'Гий Дэниович Роббертс', title:'Архонт Манрода',
+    text:'Фактический соправитель Фирентийского союза полисов вместе с Гариком Вулби: несколько должностей сразу, управление Полисом Манродом и вес в Совете Полисов Южного континента — дальний аванпост Роббертсов на Юге.' },
+  { id:'egoriya', who:'Егория Уильямовна Роббертс', title:'Герцогиня Тарестивии',
+    text:'Правит богатейшей прибрежной Тарестивией — важнейшим морским узлом между островитянами и побережьем Западного континента; пережила разорение Теодора Кеджина и активно двигает Идею Сильнейшего среди всех линий.' },
+  { id:'manuel', who:'Мануэль Роббертс', title:'Спаситель рода · полководец',
+    text:'Нашёл в Оазисе лекарство от кристальной болезни и выторговал его, спасая Стивена и ещё нескольких близких; один из немногих командиров островитян в Басло-Фирентийском регионе — разбил Катхода в нескольких боях; участник грабежа Спендеркука.' },
+  { id:'gregari', who:'Грегари Роббертс', title:'Ювелир всех королевских дворов',
+    text:'Глава предприятия по добыче драгоценностей: почти сто лет его изделия из недорогих металлов отменного качества шли во все правящие дворы Западного континента — экономическое чудо рода, кормившее династию.' },
+  { id:'eroriy', who:'Ерорий Артурович Роббертс', title:'Вундеркинд Эльфийского Альбиона',
+    text:'В двенадцать лет — придворный музыкант с огромной популярностью; в его крови кровь сразу всех потомков Артура-поэта — одна магическим путём кровавых эльфов, другая вполне естественная.' },
+  { id:'rodney_b', who:'Роднихаим Ибн Хаджимурадов', title:'Главком смуглых баббахистов',
+    text:'Родни Роббертс, сын Джейкоба: возглавил войско смуглых баббахистов, разбил шедшее войско отца и взял его в плен (выкуп 8 000 000 дененов); с огромной популярностью в войске готовит переворот за престол.' }
+];
+const KADAS_NOTE = 'Маргарет Кадас — из династии Кадас; пережила мужа на несколько лет и пала примерно к 130-му. Её отец Пётр пал годом раньше, с матерью Френсис — оба от болезней, в разные дни. Замок Кадас принял младший брат Зигмунд: ветеран вартемберских войн, ушедший в мирную жизнь. Его сын Александр Кадас (р. 139) — нынешний глава династии, его наследник — Альберт Кадас (р. 183). Сами Кадасы ведут род около четырёх веков: прародитель Кадас, вартемберский странник, поддержал графа, получил землю и возвёл замок — всё в Басло-фирентийских землях.';
+const OFELIA_NOTE = 'Дочь Андре Сара и Александры Сар; пала примерно к 130-му, а отец — годом раньше: оба родителя ушли от болезней, в разные дни. Родной брат — Нерк Сар: долго участвовал в вартемберских войнах, затем принял замок Сара и мирную жизнь. Его сын Александр Сар (р. 139) — нынешний глава династии, наследник — Альберт Сар (р. 183). Сары ведут род около четырёх веков: прародитель Сар, вартемберский странник, поддержал графа, получил удел и построил замок — в Басло-фирентийских землях.';
+/* ── ДИНАСТИЯ КАДАС ── род супруги основателя: идёт по общей сетке поколений —
+   прародитель в колонке Робберта (I), Пётр с женой — в колонке Диалтона (II),
+   их дети — в колонке Уильяма (III): путь дочери сходится с родом (брак),
+   линия Зигмунда идёт параллельно. От Петра к дочери ведёт нить династии. */
+const KADAS_TREE = {
+  id:'kadash', dname:'Династия Кадас', group:'kadas', name:'Кадас', years:'?', tag:'прародитель',
+  col0:0, gshift:0, bridge:{from:'petrk'},
+  note:'Вартемберский странник: около четырёх веков назад поддержал графа, получил землю и возвёл замок Кадас — в Басло-фирентийских землях. Род с тех пор ведёт свою нить; имена промежуточных колён летопись не сохранила — достоверно известны лишь поздние Кадасы: Пётр, его жена Френсис и их дети.',
+  children:[
+    { id:'petrk', name:'Пётр Кадас', years:'? — ок. 129', tag:'глава замка Кадас',
+      note:'Поздний Кадас, глава замка. Отец супруги основателя Роббертсов и Зигмунда. Пал от болезни годом раньше жены — древний род, но болезни не щадят и его.',
+      spouse:{ id:'francisk', name:'Френсис Кадас', years:'? — ок. 129', sex:'f', sub:'супруга · мать Зигмунда',
+        note:'Жена Петра. Пала от болезни в другой день, чем муж: за одну зиму замок Кадас потерял обоих хозяев — и перешёл к младшему сыну.' },
+      children:[
+        { id:'zigmundk', name:'Зигмунд Кадас', years:'ок. 100 — н.в.', tag:'ветеран · глава замка',
+          note:'Младший брат той самой Маргарет Кадас — супруги основателя династии Роббертсов (её карточка — в древе Роббертсов, рядом с Уильямом). Ветеран вартемберских войн, ушедший в мирную жизнь: принял замок Кадас после смерти родителей и держит его поныне.',
+          children:[
+            { id:'alexk', name:'Александр Кадас', years:'139 — н.в.', tag:'нынешний глава династии',
+              note:'Сын Зигмунда, рождённый уже в мирные годы. Нынешний глава династии Кадас: замок в Басло-фирентийских землях живёт тихо — торговля, земля и память о четырёх веках рода.',
+              children:[
+                { id:'albertk', name:'Альберт Кадас', years:'183 — н.в.', tag:'наследник Кадасов',
+                  note:'Наследник Александра. Молодой Кадас, в котором род видит своё продолжение: четыре века замка ещё не закончились.' }
+              ]}
+          ]}
+      ]}
+  ]
+};
+
+/* ── ДИНАСТИЯ САР ── род матери Ричардовой ветви: та же общая сетка — прародитель
+   в колонке Робберта (I); имена ранних колён летопись не сохранила, поэтому линия
+   к Андре идёт через колонку без карточек. Андре с женой — в колонке Уильяма (III),
+   их дети — в колонке Ричарда (IV): путь Офелии сходится с родом (брак), линия
+   Нерка идёт параллельно. */
+const SAR_TREE = {
+  id:'sarh', dname:'Династия Сар', group:'sar', name:'Сар', years:'?', tag:'прародитель',
+  col0:0, gshift:1, bridge:{from:'andres'},
+  note:'Вартемберский странник: около четырёх веков назад поддержал графа, получил удел и построил замок Сара — в Басло-фирентийских землях, по соседству с замком Кадас. Имена ранних колён летопись не сохранила; известно лишь позднее поколение — Андре, его жена Александра и их дети.',
+  children:[
+    { id:'andres', name:'Андре Сар', years:'? — ок. 129', tag:'глава замка Сара',
+      note:'Поздний Сар, глава замка Сара. Отец Офелии и Нерка. Пал от болезни годом раньше жены — в разные дни, но от одного недуга.',
+      spouse:{ id:'alexsandr', name:'Александра Сар', years:'? — ок. 130', sex:'f', sub:'супруга · мать Офелии и Нерка',
+        note:'Жена Андре Сара. Пала примерно к 130-му, пережив мужа недолгий срок. Её дочь Офелия вышла за Ричарда Роббертса — так замок Сара породнился с династией Роббертсов.' },
+      children:[
+        { id:'nerks', name:'Нерк Сар', years:'ок. 100 — н.в.', tag:'ветеран · глава замка',
+          note:'Долго участвовал в вартемберских войнах, затем принял замок Сара и мирную жизнь. Родной брат Офелии — той, что стала супругой Ричарда Роббертса (её карточка — в древе Роббертсов).',
+          children:[
+            { id:'alexs', name:'Александр Сар', years:'139 — н.в.', tag:'нынешний глава династии',
+              note:'Сын Нерка, рождённый после войн. Нынешний глава династии Сар: держит замок Сара в Басло-фирентийских землях, храня четыре века родной истории.',
+              children:[
+                { id:'alberts', name:'Альберт Сар', years:'183 — н.в.', tag:'наследник Саров',
+                  note:'Наследник Александра Сара. Род продолжается — тихо, спокойно и долго, как и задумывал странник, четыре века назад поддержавший графа.' }
+              ]}
+          ]}
+      ]}
+  ]
+};
+
+const ROBBERT_NOTE = 'Был жил Робберт — смутная личность: летопись не помнит ни его дел, ни точных лет, ни лица. Даже фамилии он при жизни не носил — имя его лишь позже легло в основу родовой фамилии Роббертсов. Достоверно одно: от неизвестной женщины он смог породить на свет Диалтона — через которого род и продолжился. На момент смерти Робберту было восемьдесят лет.';
+const DIALTON_NOTE = 'Сын смутного Робберта и неизвестной женщины — сам такой же безвестный: титулов не имел, хотя уже носил родовое имя Роббертс, данное по отцу. Летопись говорит о нём коротко: Диалтон смог породить на свет Уильяма — будущего основателя династии. Умер в 154 году — около трёх десятилетий спустя после смерти сына: сильная кровь, прославившая род, пошла не от него.';
+const UNKNOWNW_NOTE = 'Имя её летопись не сохранила — известна лишь роль: от неё смутный Робберт породил Диалтона, через которого пошёл весь род Роббертсов. Ни портрета, ни могилы — только строка в родном сказе.';
+
+const TREE = {
+  id:'robbert', name:'Робберт', years:'† в 80 лет', tag:'родоначальник рода',
+  note: ROBBERT_NOTE,
+  spouse:{ id:'unknownw', name:'Неизвестная женщина', years:'—', sex:'f', sub:'мать Диалтона', note:UNKNOWNW_NOTE },
+  children:[
+
+    /* ── ВТОРОЕ ПОКОЛЕНИЕ ── */
+    { id:'dialton', name:'Диалтон Роббертс', years:'? — 154', tag:'отец Уильяма',
+      note: DIALTON_NOTE,
+      children:[
+
+        { id:'william', name:'Уильям Роббертс', years:'? — 122', sub:'основатель династии',
+          note: WILLIAM_NOTE,
+          spouse:{ id:'kadas', name:'Маргарет Кадас', years:'? — ок. 130', sex:'f', sub:'супруга · династия Кадас', note:KADAS_NOTE, clan:KADAS_TREE },
+          children:[
+
+            /* ── СЫНОВЬЯ ── */
+    { id:'benjamin', name:'Бенджамин Роббертс', years:'85 — 172', group:'sons', tag:'старший сын',
+      note:'Родился, когда Уильям, на фоне конфликта с Эттэ и эпидемии хаоса, искал силы в богах — любых. Поселился с отцом в вартемберских землях. В тридцать лет вступил в Храмовничий орден и принял обет безбрачия. Восемьдесят семь лет воевал с тёмными подгорьскими силами, был претендентом на роль Храмовника — но продолжительная магическая болезнь, которой его заразили подгорьцы, его забрала.',
+      children:[
+        { id:'george', name:'Джордж Роббертс', years:'152 — 200-е', tag:'бастард',
+          note:'Бастард Бенджамина, зачатый с крестьянкой в военном походе; родство пришлось доказывать с трудом. Гонимый Идеей Сильнейшего, убедил столетнего Грегари зачать дочь — и около 207-го женился на ней, соединив первую и вторую линии. Пал в одном из междоусобных конфликтов, не дожив до наших дней.',
+          spouse:{ id:'gregd', name:'Дочь Грегари', years:'? — 200-е', sex:'f', sub:'супруга · соединила Бенджаминидов и Грегаридов',
+            note:'Единственная дочь Грегари, зачатая по Идее Сильнейшего, когда отцу было больше сотни. Вышла за Джорджа — так первая и вторая линии стали одной. Пала вслед за отцом и мужем; от всего союза остался один сын — Марк.' },
+          children:[
+            { id:'mark', name:'Марк Джорджович Роббертс', years:'214 — н.в.', tag:'барон Бендгрегарии',
+              note:'Барон небогатого приморского баронства Бендгрегарии — с одним имением и почти без крепостных, ещё не оправившегося от войны с Теодором Кеджином. Тратит огромные средства на поиски малоизвестных Роббертсов. К Яльвинским (Баттлеридам) относится плохо: считает их «грязными Роббертсами», с которыми всё равно придётся смешиваться. Помолвлен с герцогиней Егорией — своим сюзереном и родственницей; детей и жены пока не имеет, но понимает всю необходимость Идеи.' }
+          ]}
+      ]},
+
+    { id:'gregari', name:'Грегари Роббертс', years:'95 — 200-е', group:'sons', noStub:true,
+      note:'Родился уже в вартемберских землях, на фоне Фьродлингской колонизации. Глава предприятия по добыче драгоценностей для королевских дворов; почти за сотню лет побывал во всех правящих дворах Западного континента, его драгоценности из недорогих металлов в огромном спросе благодаря качеству. В старости, проникшись Идеей Сильнейшего, зачал единственную дочь. Погиб, утонув, спасаясь бегством от войска Теодора Кеджина из своего особняка; дочь пережила его ненадолго. Род его продолжился через внука — Марка.' },
+
+    { id:'tarrens', name:'Тарренс Роббертс', years:'98 — н.в.', group:'sons',
+      note:'Был особенно близок с Грегари и помогал распространять Роббертские драгоценности — в торговле вышел менее удачно, зато преуспел в семейных делах: обменял небольшое состояние на династический союз. Живёт рядом с братом и ухаживает за ним.',
+      spouse:{ id:'kate', name:'Леди Кейт Карлай', years:'—', sex:'f', sub:'супруга · баронесса',
+        note:'Красива, грамотна и единственная наследница баронства. Через этот брак династия Роббертсов стала официально вартемберским фьордлингским баронским титулом.' },
+      children:[
+        { id:'williamjr', name:'Уильям Роббертс', years:'168 — н.в.',
+          note:'Задумался о продолжении династии ещё в молодости и, находясь в Вартемберии, проникся Идеей Сильнейшего. Женился на единственной дочери Стивена — ей было всего четырнадцать, — соединив Тарренсидов и Стивенсидов. Их дочь Егория выбрала фамилию просто «Роббертс»: основатель завещал роду Стивенсидов быть главным.',
+          spouse:{ id:'stevd', name:'Дочь Стивена', years:'ок. 214 — н.в.', sex:'f', sub:'супруга · единственная наследница Стивенсидов',
+            note:'Выдана за Уильяма в четырнадцать лет — так соединились вторая и третья линии. Мать герцогини Егории.' },
+          children:[
+            { id:'egoriya', name:'Егория Уильямовна Роббертс', years:'228 — н.в.', sex:'f', tag:'герцогиня Тарестивии',
+              note:'Герцогиня крайне богатой прибрежной Тарестивии — важного морского узла между островитянами и побережьем Западного континента; Теодор Кеджин разорил лишь одно, самое южное, её баронство. Умна и расчётлива в своих планах. Носит фамилию просто Роббертс: её ветвь — старшая юридически. Активно двигает Идею Сильнейшего среди всех остальных; помолвлена со своим вассалом бароном Марком — так соединятся и первая линия. Гальяна, Джейкоб и Леонард для неё пример вдохновения. Её письма к Казилину в Яльве канцелярия не передавала — чтобы не портить репутацию Яльвинских Роббертсов связью с вартемберскими.' }
+          ]}
+      ]},
+
+    { id:'steven', name:'Стивен Роббертс', years:'99 — н.в.', group:'sons', noStub:true,
+      note:'В пятнадцать лет пошёл служить храмовникам; рос крайне здоровым, и Уильям назначил его наследником титула — завещание так и не переделал, хотя позже выяснилось: старшие братья болели не просто так, в них формировалась сильная кровь (мамины гены оказались немного сильнее отцовских), а у Бенджамина и Стивена она была врождённой. В 122 году — Барон Замка Роббертсов; в 186-м получил титул Графа и целый округ в Королевстве Драгонов. С графством появилась и жена, а затем — единственная дочь: её выдали за Уильяма Тарренсида, когда ей было всего четырнадцать, — по Идее Сильнейшего и воле основателя, завещавшего Стивенсидам главенство.',
+      spouse:{ id:'stevensw', name:'Жена Стивена', years:'—', sub:'знатного рода · брак после титула графа',
+        note:'Появилась лишь после получения Стивеном графства: с простолюдинкой Роббертс жениться не мог, а знатные долго не хотели. Мать его единственной дочери.' } },
+
+    { id:'manuel', name:'Мануэль Роббертс', years:'100 — н.в.', group:'sons', tag:'близнец Родни',
+      note:'Активный с детства — и в свои девяносто всё ещё в авантюрах. Подгорьскую войну начал на стороне вартемберцев, затем перешёл к Драгонам вместе с братом. Нашёл в Оазисе лекарство от кристальной болезни и выторговал его, спасая Стивена и ещё нескольких близких. Один из немногих командиров островитян в Басло-Фирентийском регионе — разбил Катхода в нескольких небольших боях. Участвовал в грабеже Спендеркука — авантюристы уважали друг друга. В конце концов до Мануэля дошла весть об Идее Сильнейшего — и он сильно ею вдохновился, воспитав в этих канонах единственного сына. Борьбу за власть в Басло-Фиренции проиграл: дядя его жены успел зачать наследника. Теперь борется за наследие жены — она племянница бездетного правителя, и ближе в роду никого нет.',
+      spouse:{ id:'avigail', name:'Авигайле Вулби', years:'—', sex:'f', sub:'супруга · Басло-Фиренция',
+        note:'Дочь влиятельного басло-фирентийца; в несколько раз моложе мужа.' },
+      children:[
+        { id:'daniel', name:'Дэниэль Роббертс', years:'ок. 181 — н.в.', tag:'глава Мануэлидов',
+          note:'Единственный сын Мануэля и Авигайлы, воспитан в канонах Идеи Сильнейшего. Около 220-го женился на Зере — бастардке морехода Теодорика, — соединив Мануэлидов и Родридов: фамилию оставили Роббертс, ибо считали себя старшим родом Южного континента, к Западному не относящимся. Его сын Гий стал архонтом и соправителем Фирентийского союза полисов.',
+          spouse:{ id:'zera', name:'Зера Роббертс', years:'? — н.в.', sub:'супруга · бастардка Теодорика',
+            note:'Дочь-бастард Теодорика: тот прибыл на Южный континент «с девочкой на руках». Вышла за Дэниэля — мать архонта Гия.' },
+          children:[
+            { id:'giiy', name:'Гий Дэниович Роббертс', years:'217 — н.в.', tag:'архонт Манрода',
+              note:'Важный деятель Фирентийских краёв, занимает несколько должностей, управляет Полисом Манродом; фактически соправитель Фирентийского союза полисов вместе с дальним родственником Гариком Вулби. Единственный политический провал — не отстоял перед боязливым Советом Полисов переговоры о союзе с Яльвой, где правят Роббертсы: подобный династический союз отдал бы Фиренцию в их власти. К Яльвинским Роббертсам относится прекрасно, но сильно рисковать не может. Воспитывает помолвленную с ним Джикию Ахмовну — и восхваляет перед ней Яльвинских, чтобы в конце концов сблизиться с ними.' }
+          ]}
+      ]},
+
+    { id:'rodney', name:'Родни Роббертс', years:'100 — 122', group:'sons', tag:'близнец Мануэля',
+      note:'Выбрал спокойные странствия — и пал от нападения животного в одном из первых путешествий, в один день с отцом. Успел обвенчаться с Алийной, странствующей женщиной, встреченной в пути; именно она сообщила роду о его гибели.',
+      spouse:{ id:'aliyna', name:'Алийна', years:'—', sub:'супруга · странница' },
+      children:[
+        { id:'teodorik', name:'Теодорик Роббертс', years:'123 — н.в.', tag:'бастард · мореход',
+          note:'Родился уже после гибели отца — и продолжил его дело: странствует и составляет карты многих регионов с их секретами. После Западного континента отплыл на Южный — прибыл туда с дочерью-бастардом Зерой на руках; Зера вышла за Дэниэля Мануэлида, соединив третью линию. Сам Теодорик и далее вносит свой вклад в дело странствий в этих краях.' }
+      ]},
+
+    { id:'jason', name:'Джейсон Роббертс', years:'102 — 187', group:'sons',
+      note:'Больше всех унаследовал магического. В молодости стал придворным магом в Смуглых землях и обосновался там, гонимый вартемберцами. Магию обожал и тратил чрезмерно — пал от магического истощения. Успел биологически зачать дитя со смуглой танцовщицей.',
+      children:[
+        { id:'ahma', name:'Ахма Роббертс', years:'ок. 178 — н.в.', tag:'бастард',
+          note:'Родился магом, предрасположенным к магии тьмы. Выбрал путь странствий, побывал при дворе более старших Роббертсов — там ему и продвинули Идею Сильнейшего. Специфичной интригой добыл семя Гэрри, принципиально хранившего обет; нашёл смуглую проститутку Степку — та выносила дитя, и Ахма женился на ней в тридцатые годы. Тёмные магические ритуалы едва не погубили линию; дочь Джикию отправили на воспитание к Гию на Южный континент.',
+          spouse:{ id:'stepka', name:'Степка', years:'—', sub:'супруга · из смуглых земель',
+            note:'Смуглая проститутка, выносившая дитя, зачанное семенем Гэрри; стала женой Ахмы в тридцатые годы. Мать Джикии.' },
+          children:[
+            { id:'jikia', name:'Джикия Ахмовна Роббертс', years:'235 — н.в.', sex:'f', tag:'помолвлена с Гием',
+              note:'Огромный магический потенциал — но из-за магической природы зачатия проблемы с контролем: при использовании магии становится неконтролируемой силой, что может обернуться огромными проблемами, особенно в боях. После падения линии воспитывается Гием Роббертсом в Фиренции — с ним и помолвлена. К Яльвинским Роббертсам формируется крайне положительное отношение. Фамилию Ахма менять не стал — при отсутствии политических титулов в том не было нужды.' }
+          ]}
+      ]},
+
+    { id:'gerri', name:'Гэрри Роббертс', years:'103 — н.в.', group:'sons',
+      note:'Шёл под влиянием старшего брата: когда Уильям покинул вартемберские края, Бенджамин взял Гэрри к себе в попечительство, в Храмовничьи земли. Брат выбрал войну — Гэрри избрал мирную миссионерскую стезю и проповедовал в островитянских землях. В 181 году вернулся на континент: получил звание кардинала — с правом выбирать следующего Храмовника в вартемберских краях. Первый, кто открыто выступил против Идеи Сильнейшей Крови Роббертса; семени своего не дал никому и принципиально хранил обет — впрочем, Ахма всё же добыл его тёмной интригой. С женщинами не контактирует, понимая, что его душа и тело принадлежат божественным силам.' },
+
+    { id:'dol', name:'Дол Роббертс', years:'104 — 122', group:'sons',
+      note:'Честолюбивый участник бугуртов: мечтал стать великим рыцарем — и пал на них ещё при жизни отца, который так и не узнал об этом. Сильный, красивый, с множеством поклонниц: Леди Фародеи, дочь Графа Фародейского, родила от него сына — за что была изгнана; Храмовник официально простил её и приютил, а братья признали мальчика своим.',
+      children:[
+        { id:'dumbal', name:'Думбаль Роббертс', years:'122 — 154', tag:'бастард',
+          note:'Прожил чуть больше отца — и пошёл полностью по его стопам, в рыцари. Незадолго до собственной гибели зачал дитя с младшей Леди Высокого Замка — ей едва исполнилось восемнадцать. Она бежала в островитянские края, сохранив фамилию Роббертс.',
+          children:[
+            { id:'eirik', name:'Эйрик Роббертс', years:'154 — 179', tag:'бастард',
+              note:'Активный воин и берсерк. В 159-м остался покинут и матерью; путь начинал в сиротском доме Норд-Сторма. Дослужился до личного телохранителя Ангерна — уже после того, как тот отошёл от дел. Пал в экспедиции на Южном континенте. Был свободным человеком с несколькими жёнами.',
+              children:[
+                { id:'gedrik', name:'Гедрик Роббертс', years:'ок. 179 — н.в.', tag:'бастард',
+                  note:'Родила Мулья из Смуглых земель — жена, взятая в плен в одном из походов: резкая ненависть между ними сменилась пылкой и страстной любовью. Участвовал во множестве кампаний и чудом породнился с Вилмундом Гельсом — своим внучатым племянником и многократным врагом: тот выдал за Гедрика единственную дочь, чтобы окончательно переманить его на свою сторону.',
+                  spouse:{ id:'wilmd', name:'Дочь Вилмунда Гельса', years:'—', sex:'f', sub:'супруга · богатый дом Гельсов',
+                    note:'Единственная дочь Вилмунда Гельса, выданная за бывшего врага ради союза линий. Мать графа Гума.' },
+                  children:[
+                    { id:'gum', name:'Гум Гедрикович Роббертс', years:'220 — н.в.', tag:'граф Джейгэрдолмэра',
+                      note:'Граф неплохо экономически развитого Джейгэрдолмэра в Вартемберии. Вассал герцогини Егории и сюзерен барона Марка: по титулам Роббертсы делятся на баронов, графов и герцогов, и всем понятен общий план соединить род воедино. Вся его родня пала в междоусобицах, сам же — настоящий вартемберский рыцарь и хороший человек, по заверениям знавших его. К Яльвинским Роббертсам отношение положительное, но без фанатизма: просто рад за родичей, что заняли такой высокий статус.' }
+                  ]}
+              ]}
+          ]}
+      ]},
+
+    { id:'arthur', name:'Артур Роббертс', years:'107 — 166', group:'sons',
+      note:'Поэт природного жанра: посвящал оды отдельным деревьям и прочему. Пошёл вслед за отцом в Покирстод, успел видеться с ним там и принял Покирстодоверие. Его стихи особенно полюбили эльфы Южного континента; путь завершился в Эльфийском Альбионе — не перенёс тоски по Покирстодовым землям, а эльфы не отпускали, задерживая хорошей жизнью. Женился на королевской дочери-эльфийке — неслыханная честь, прежде доступная лишь правителям. Семь детей — истинное чудо для всей расы. В 166-м с ним прощались несколько недель: короли эльфов не могли простить себе, что услышали его просьбы слишком поздно. Имена мальчиков выбирала жена, девочек — муж. Позднее эльфы, мечтая возродить талант поэта, магическим путём родили ребёнка от крови всех его детей — эксперимент провалился, а среди живых потомков продолжение крови Артура несёт внучка Ирина.',
+      spouse:{ id:'elianel', name:'Элианель', years:'—', sex:'f', sub:'супруга · эльфийская принцесса',
+        note:'Королевская дочь эльфов. Проявляла к Артуру особую нежность и заботу — и родила ему семерых.' },
+      children:[
+        { id:'ihael', name:'Ихаэль Роббертс', years:'160 — 230-е', tag:'близнец Габриэля',
+          note:'Придворный поэт. Артуриды заплатили за магический ритуал дорогую цену: тоскливая эпидемия обрушилась на мужскую часть линии; прочие попали в опалу после происшествия с Ерорием и пали в тюрьмах.' },
+        { id:'gabriel', name:'Габриэль Роббертс', years:'160 — 230-е', tag:'близнец Ихаэля',
+          note:'Придворный писец; близнец у эльфов — благословение (рождается в 0,01% случаев). Пал вместе с мужской частью Артуридов в тоскливой эпидемии.' },
+        { id:'rifael', name:'Рифаэль Роббертс', years:'163 — 230-е', tag:'тройня',
+          note:'Военный в столичной страже. Пал в тоскливой эпидемии, обрушившейся на мужскую часть линии.' },
+        { id:'muriel', name:'Муриэль Роббертс', years:'163 — 230-е', tag:'тройня',
+          note:'Придворный дегустатор при дворе. Пал в тоскливой эпидемии.' },
+        { id:'raguel', name:'Рагуэль Роббертс', years:'163 — 230-е', tag:'тройня',
+          note:'Придворный музыкант. Пал в тоскливой эпидемии.' },
+        { id:'seriel', name:'Сериэль Роббертс', years:'166 — 230-е',
+          note:'Тайный агент, участник серьёзных миссий. Пал — линия Артуридов угасла по мужской части.' },
+        { id:'irina', name:'Ирина Роббертс', years:'166 — н.в.', sex:'f',
+          note:'Фрейлина одной из королев эльфов, живёт неплохо. Единственная из семерых, кто продолжил кровь: с Аполиэлем родила дочь Ассию — а через неё род Артура обрёл Ерория, носителя крови всех потомков поэта.',
+          spouse:{ id:'apoliel', name:'Аполиэль', years:'неск. сотен лет', sub:'супруг · высший эльф',
+            note:'Потомственный военный и жрец.' },
+          children:[
+            { id:'assia', name:'Ассия Роббертс', years:'? — н.в.', sex:'f', tag:'полуэльфийка',
+              note:'Дочь Ирины и Аполиэля. Вышла за Артура Роббертса — юношу, магически рождённого эльфами от крови всех детей Артура-поэта. Мать Ерория.',
+              spouse:{ id:'arthur2', name:'Артур Роббертс', years:'—', sub:'супруг · рождён магией кровавых эльфов',
+                note:'Мальчик, рождённый эльфами с помощью Мерцкой силы кровавых эльфов: магическим путём взяли всё лучшее от всех детей Артура. Таланта не получил — эксперимент провалился. Отсюда отчество его сына — Артурович.' },
+              children:[
+                { id:'eroriy', name:'Ерорий Артурович Роббертс', years:'230 — н.в.', tag:'бард · помолвлен с Мишель',
+                  note:'Огромный талант: в двенадцать лет уже придворный музыкант с огромной популярностью — в нём кровь сразу всех потомков Артура, одна магическим путём, другая вполне естественная. Крайне слаб здоровьем: кровавый ритуал подпортил многие его особенности, и будущая жена Мишель постоянно держит при нём лекарей. Воспитан эльфами и презирает Яльвинских Роббертсов как низший сорт; фамилию сохранил лишь потому, что много лет жил и воспитывался в эльфийских краях. Ради безопасности увезён из Эльфийского Альбиона — приют организовала бабка Берта.' }
+              ]}
+          ]}
+      ]},
+
+    { id:'buttler', name:'Баттлер Роббертс', years:'117 — 180', group:'sons',
+      note:'Нажива стала главным стимулом: сбежал из дома малолетним и вступил в вартемберские наёмники — с тех пор постоянно воевал. Пал иронично: случайно упал с коня, пока ехал домой после завершения наёмнической карьеры. Обоих сыновей, рождённых от женщин, быстро сбежавших с Баллтеровского гнёта, забрал себе — и оба продолжили его дело. В обще-родовом движении Идеи Сильнейшего Баттлериды оказались изгоями: они единственные из кровных Роббертсов осели в Яльве — земле, которую прочие линии презирают по заветам основателя, — хотя именно Роббертсы там правят.',
+      children:[
+        { id:'morris', name:'Моррис Роббертс', years:'137 — н.в.', tag:'бастард',
+          note:'Старший. Вартемберский наёмник — до сих пор работает в вартемберских краях.' },
+        { id:'dirty', name:'Дёрти Роббертс', years:'148 — 168', tag:'бастард',
+          note:'Младший. Пал в сражениях с островитянскими войсками. С четырнадцати лет был женат на взрослой вартемберской леди — та родила четверых детей с разницей в год.',
+          spouse:{ id:'dirtyw', name:'Вартемберская леди', years:'—', sub:'супруга · старше мужа на годы',
+            note:'Взрослая вартемберская леди, обвенчавшаяся с четырнадцатилетним Дёрти. Родила четверых детей с разницей в год.' },
+          children:[
+            { id:'jacob', name:'Джейкоб I Роббертс', years:'151 — 254', tag:'Патриарх XI · Дукс Чернополья · Дукс Территории Апостолов',
+              note:'От наёмника и паладина Святого Воинства — через Командора Ордена — до XI Патриарха всея Покирстодовых земель; также регент Окурка, наследственный Праведник Дорог, Вождь Сухопутных путей и Дукс Территории Апостолов. В Сражении за Апостольск был тяжело ранен и отравлен, став живым символом борьбы; пережил плен у смуглых баббахистов (выкуп 8 000 000 дененов), провёл реорганизацию Святого Ордена и подписал мир с Роудом Вальтером («Да будет мир»). Вклад в Тронийский банк: 750 000 дененов под 10 % годовых. Для герцогини Егории и Леонарда — пример вдохновения; для Андрея Джоновича — «узурпатор, тиран и диктатор», с которым иметь дел тот не хочет совсем. Женат был трижды: первой была Маргарет — её он пережил, — затем Фелиция, а под конец жизни привёл в дом Марьяну Вум. От первых двух браков — четверо сыновей: Дэвид, Кирк, Кеннет и Родни; девочку из храма-приюта взял на попечительство и назвал Маргарет I в честь умершей первой жены; Марьяна под старость родила ему Альфреда.',
+              spouse:{ id:'maryana', name:'Марьяна Вум', years:'—', sub:'супруга · третий брак · мать Альфреда',
+                note:'Дочь Рольны Вум, рыжеволосая красавица с мальчишеским нравом: охотница и лучница, доучивалась на богослова, однажды месяц провела на Тюремном Острове — целилась в кабана, а подстрелила лошадь под самим Казилином Тройгардером. Вышла за Джейкоба, когда тому было под девяносто, и долго не могла зачать: ещё в юности получила тяжёлые травмы; после лечения у врачей наконец понесла. Пока муж томился в плену у смуглых баббахистов, деверь Леонард составлял для неё и будущего ребёнка особое «меню» — правильная подача, по его слову, делает еду вдвойне сытнее. Была с мужем во время осады Апостольска, малый ребёнок тогда находился у её родственников. Когда Альфред оказался при смерти, несла его к святому месту на руках — сын выжил чудом Покирстодова, а её саму вытянул монастырь: пережив послеродовую депрессию, она ушла туда, доверив мальчика монахине Иванье.' },
+              prevSpouses:[
+                { id:'felicia', name:'Фелиция', years:'—', sub:'супруга · второй брак',
+                  note:'Вторая жена Джейкоба — от этого брака часть четверых сыновей. О её дальнейшей судьбе летопись умалчивает: достоверно известно лишь, что пережил муж первую жену, Маргарет.' },
+                { id:'margaretw', name:'Маргарет', years:'—', sub:'супруга · первый брак · умерла',
+                  note:'Первая жена Джейкоба — та, которую он пережил. В её честь названа приёмная дочь Маргарет I, взятая из храма-приюта уже после её смерти.' }
+              ],
+              children:[
+                { id:'david', name:'Дэвид Роббертс', years:'—', by:null,
+                  note:'Первый из четверых сыновей Джейкоба от первых двух браков — Маргарет и Фелиции. О его судьбе летопись умалчивает: о братьях и сёстрах отец спрашивал в письме к Родни — из плена и без ответа.' },
+                { id:'kirk', name:'Кирк Роббертс', years:'—', by:null,
+                  note:'Второй из четверых сыновей Джейкоба от первых двух браков. Известно лишь имя — судьбу его летопись не сохранила.' },
+                { id:'kenneth', name:'Кеннет Роббертс', years:'—', by:null,
+                  note:'Третий из четверых сыновей Джейкоба от первых двух браков. Известно лишь имя — судьбу его летопись не сохранила.' },
+                { id:'rodney_b', name:'Родни Роббертс', years:'—', by:null, tag:'главком баббахистов · Роднихаим',
+                  note:'Четвёртый из сыновей от первых двух браков; отец некогда его бросил — и сын этого не простил. Сменил имя на баббахистский манер: ныне он Роднихаим Ибн Хаджимурадов, приёмный сын прошлого Эмира (семеро Валиев — родные сыновья Эмира; четверо против Родни, трое за него). Возглавил войско смуглых баббахистов, разбил шедшее войско отца и взял его в плен; выкуп составил 8 000 000 денаров. Парадокс плена — сын и отец наконец увиделись. Из плена Джейкоб писал ему: «Мой сын Родни Роббертс по ветке Баттлеров… я продолжу называть тебя Родни, ибо дал это имя после твоего рождения», — и просил лишь вернуть первоначальное имя; письмо проигнорировали. Как выяснилось, Родни не просто командир, а целый военачальник с огромной популярностью в войске, готовящий переворот, чтобы занять престол; плен отца сильно затруднял его положение — часть баббахистов отвернулась. Сам ли он оберегает отца или занят переворотом, но диалога с ним не ведёт. Грядёт серьёзный междоусобный конфликт.' },
+                { id:'margareti', name:'Маргарет I Роббертс', years:'—', group:'adopted', by:null, tag:'приёмная дочь · храм-приют',
+                  note:'Девочка из храма-приюта, взятая Джейкобом на попечительство и названная Маргарет I — в честь умершей первой жены. Кровной Роббертсов в ней нет, но дом воспитал её как родную.' },
+                { id:'alfred', name:'Альфред Джейкобович Роббертс', years:'242 — н.в.', by:'maryana', tag:'долгожданный наследник',
+                  note:'Сын Джейкоба и Марьяны. Мать долго не могла зачать — сказались травмы, полученные в юности, — и лишь после лечения понесла; имя отец дал ему в 242-м, вернувшись из баббахистского плена. Родился слабым и младенцем был при смерти: лучшие врачи разводили руками, и отчаявшаяся Марьяна несла его к святому месту на руках — «если и умрёт, то в материнских объятиях»; выжил чудом Покирстодова, но при рождении получил отклонения. Рос под присмотром монахини Иваньи: по её слову — «юродивый», к шести годам едва освоил простые слова, математика давалась тяжко, однако темпы развития понемногу ускорились, и позже его развивали — детская математика, речь, молитвы. Дядя Леонард, забрав однажды с собой до Вартемло, подарил сделанные своими руками деревянные скипетр и державу — подарок полюбился. Рос при дяде и Гени вместе с Леомалом — «два брата от двух братьев», не разлей вода.' }
+              ] },
+            { id:'elsa', name:'Эльза Роббертс', years:'152 — н.в.', sex:'f',
+              note:'Вышла за барона из рода Мерс; сын Альфрей — продолжение линии.',
+              children:[ { id:'alfrey', name:'Альфрей Мерс', years:'180 — н.в.',
+                tag:'прониар · регент Накрая · полководец Яльвы',
+                note:[
+                  'Сын Эльзы и барона Мерс, племянник Патриарха Джейкоба и Казилина Леонарда. Будучи местным прониаром, возглавил бунт против абсолютной власти Квилианы Зенской: собрал 9 900 войск и требовал отменить её самовластие, вернуть власть совету и пресечь произвол на местах; с каждым решением Квилианы его войско лишь пополнялось.',
+                  'Восстание победило: Альфрей добился власти в Дукате и разделил его — в одной части стал правителем сам, в прочие посадил угодных. Убедил священство объединить фамилию Квила с Закзенами и сделал его турмархом среди подчинённых, оставаясь его регентом и сохраняя брачный союз. Вальзенберия объявлена особой территорией: Мерс поклялся дяде Леонарду, что пока народ сам не изберёт Дукса, земля никому не достанется, — и стал слугой его должности в яльвинских краях.',
+                  'Выходил на «дуэль за артефакты» против чемпиона Буза — громилы-эльфа, верного слуги Лю Ци, — и пал быстро: противник превосходил его в кулачном бою несравнимо. После истребления военной верхушки Яльвы известен как Альфрей I Мерс — регент Накрайских территорий и тамошний прониар, один из двух оставшихся полководцев державы.',
+                  'Когда же Хамстер Закатной силой взял Квилиану в жёны и зачал наследника, Совет Прониаров выдвинул Хамстера главным претендентом на новый Дукат — и Альфрей Мерс, ещё вчера возглавлявший восстание, оказался отодвинут на второй план.'
+                ] } ] },
+            { id:'leonard', name:'Леонард Роббертс', years:'153 — н.в.', tag:'Казилин · Царь Центроземья «Великий»',
+              note:'Монах → основатель Покирстодской Инспекции → Преподобный Инспектор (посмертный сан) → бессменный Саккеларий → 5/6/7-й Казилин → Царь Центроземья «Великий». Автор Писания Роббертсов (11 заповедей) и Принципов Инспекции (6 пунктов: без пыток, презумпция невиновности, автономия, разделение функций, запрет обратной силы, вооружённая охрана). Вёл дело Анесфена (проклятый друид, оправдан и помещён под домашний арест); покровительствовал Ютан Полуо — пророку Мегала, жене Анесфена. Известен мирной дипломатией, прощением обидчиков и слоганом «Мы всё сможем!» (заимствован братом Джейкобом). Активно облагораживал территории, привлекшие не только паломников, но и странников — и именно странники принесли огромнейшее количество сведений о судьбе Роббертсов на Западном и Южном континентах. Так по милости Покирстодова он узнал многие грязные секреты собственной династии: идея старейших о Сильнейшей Крови, семь соединяющихся линий, изгойство Баттлеридов. Собрал наиболее полноценную картину всех линий и составил знаменитые справки об известных Роббертсах — на яльвинский манер. Будучи Казилином, на Сдерживающем Совете добился полного запрета рабства в Яльве — без единого исключения: отныне и покупка рабов «с целью освобождения» приравнена к работорговле, любой же торг людьми рассматривается только как работорговля. Судить дуксов по таким делам поставлены Совет Прониаров и Турмархов — автоматически, с разрешения и указания Казилина, при неопровержимых доказательствах; наказание назначают они — по обстоятельствам и с учётом заслуг перед Яльвой (лишь в Подгорье первичен Совет Дуксов). Минимальные наказания разнятся по краям: ссылка в Великую Пустыню без наград и титулов в Припустынье (бывшие рабы там становятся войском), пожизненное заключение в Приречье, ссылка к рабовладельцам в Империуме Зверолюдей, огромный штраф в Сплендоре, монастырская ссылка в Окурке, лишение титулов и фамилии в Центроземье — и лишь в Вартемлоо рука, титулы и изгнание, а освобождённые становятся крепостными.',
+              spouse:{ id:'geni', name:'Гени фон Клаузевиц', years:'—', sub:'супруга · умна и набожна',
+                note:'Чуткая, обаятельная и умная женщина, с которой Леонард когда-то молился и к которой на старости лет испытывал влечение, давно с тем справившись. Её отец как раз выдавал её замуж с хорошим приданым: едва Лео высказал просьбу, свадьбу организовали сразу. Взяла на себя заботу о двух мальчиках — Альфреде и Леомале, — нашла общий язык с монахиней Иваньей; вместе с мужем, детьми и Ричардом составила ту «полную семью», которой Роббертсам так не хватало. Как шептали недобрые, женское воспитание могло и испортить наследников, — но Леомал вышел одарённым, а Альфред при ней лишь окреп.' },
+              children:[
+                { id:'leomal', name:'Леомал Роббертс', years:'245 — н.в.', tag:'наследник Леонарда',
+                  note:'Первенец и наследник Леонарда. Родился зимой в время жестоких морозов — такой зимы Леонард не помнил лет восемьдесят; к Покирстодовой неделе 246-го малышу исполнился год, но имя официально не выбрано: решающее слово в Яльве исключительно за отцом, и даже крещение не проведено — мать зовёт его Леомал, и весь дом привык к этому имени. Рос одарённым — простую математику усвоил к двум годам, — но от переусердствования с обучением его берегли, дабы «не перерос сам себя». По Яльве пущен слух, будто именно его со временем определят в закрытый Университет Рыбинска: на слух о наследнике Леонарда элита и повела туда своих детей. Однажды, впрочем, заявил, что тени умеют говорить — и он им отвечает; чем кончился тот разговор, летопись умалчивает. Рос вместе с Альфредом — «два брата от двух братьев», как Леонард с Джейкобом: с раннего возраста не разлей вода, помогали друг другу в бедах; вместе с Гени, Леонардом и Ричардом росли в полной семье и были счастливы, а Гальяна долго баловала их сладостями с дальних континентов, запомнившись хорошей тётей.' }
+              ] },
+            { id:'galiana', name:'Гальяна Роббертс', years:'154 — н.в.', sex:'f', tag:'Казилин · автор ГЭП',
+              note:'Жена эмира ибн Ламмалха; после попытки найти давно разыскиваемого человека была остановлена мужем («с половиной мозга катил на неё бочку и оскорблял»), попущенным своей нелегитимностью; заявила о разводе. Со стражей дошла до Лейска, где встретила старую подругу — бывшую проститутку, помогшую ей попасть в Покисторд; ныне в имении дома в окружении братьев. Четвёртый Казилин с программой «Сохранить и Приумножить», автор ГЭП (Гальянская Экономическая Политика, 25,2 млн дененов, 5-летнее перемирие). Пережила покушение и плен в Корлене; после 1 года 4 месяцев правления ушла в путешествие, заняв третье место в топе правителей. Для герцогини Егории — пример вдохновения.',
+              spouse:{ id:'emir_lammalh', name:'Эмир ибн Ламмалх', years:'—', sub:'супруг · эмир смуглых земель; развод',
+                note:'Муж Гальяны; «с половиной мозга катил на неё бочку и оскорблял»; попущен своей нелегитимностью, после чего Гальяна заявила о разводе.' },
+              children:[ { id:'nastasya', name:'Настасья ибн Ламмалх', years:'185 — н.в.', sex:'f', tag:'бастард',
+                note:'Дочь Гальяны от эмира; носит фамилию отца — ибн Ламмалх.' } ] }
+          ]}
+      ]},
+
+    { id:'richard', name:'Ричард Роббертс', years:'—', group:'sons',
+      note:'Летопись ветви скудна. Известен брак с Офелией Сар — та пала примерно к 130-му, позже основателя.',
+      spouse:{ id:'ofelia', name:'Офелия Сар', years:'? — ок. 130', sub:'супруга · династия Сар', note:OFELIA_NOTE, clan:SAR_TREE } },
+
+    /* ── ДОЧЕРИ ── */
+    { id:'mari', name:'Мари Роббертс', years:'105 — н.в.', group:'daughters',
+      note:'Вышла замуж незадолго до гибели Уильяма в Покирстоде — за богатого, но малознатного Фридриха Гельса, с которым прожила долгую жизнь. С 139-го, когда Фридрих пал, следит за сыном; фактически управляет богатым домом Гельсов и ни в чём себе не отказывает. Живут в вартемберских драгонских краях.',
+      spouse:{ id:'friedrich', name:'Фридрих Гельс', years:'? — 139', sub:'супруг · богат, малознатен' },
+      children:[
+        { id:'edward', name:'Эдуард Гельс', years:'ок. 138 — н.в.', sex:'m',
+          note:'Со временем стал главой богатого дома. Женился лишь в 181-м, в сорок три года.',
+          children:[
+            { id:'wildmund', name:'Вилмунд Гельс', years:'182 — н.в.', sex:'m',
+              note:'Глава богатого дома Гельсов. Многократно враждовал с Гедриком Долидом — и в конце выдал за него свою единственную дочь, чтобы окончательно переманить на свою сторону. Внук Гум — граф в Вартемберии.' }
+          ]}
+      ]},
+
+    { id:'berta', name:'Берта Роббертс', years:'106 — 240-е', group:'daughters',
+      note:'Деятель культуры самых разных направлений — остановилась на пении: с 174 года певица при дворе Фьордлинга. Первая в династии, кто родил двоих детей вместо одного. Прониклась Идеей Сильнейшего и самолично поженила своих правнуков — Виктора Ниссона и Ваду Жефрансуа (206), соединив обе ветви Бертидов. Активно выяснила, где все члены Роббертсов, и приютила увезённого из Альбиона Ерория. Пала в ходе интриг; потомки часто с ней связывались и очень её чтили.',
+      children:[
+        { id:'eleonora', name:'Элеонора Граймс', years:'122 — 153', tag:'бастард',
+          note:'Отец — бродячий бард Людвинг Граймс из обедневшей вартемберской династии: разошёлся с Бертой почти сразу и пал в 161-м от продолжительной венерической болезни. Элеонора вышла за барона, который её сильно любил.',
+          children:[
+            { id:'andre', name:'Андрэ Жефранус', years:'151 — 168', sex:'m', tag:'бастард',
+              note:'Наследовал Замок Жефрануса от бездетного и неженатого отца-барона — тот пал от тоски по Элеоноре. Сам Андрэ прожил всего семнадцать лет, но успел родить сына.',
+              children:[
+                { id:'elbert', name:'Эльберт Жефрансуа', years:'168 — н.в.', sex:'m',
+                  note:'Возглавил Замок Жефрануса. Его дочь Вада продолжила линию: бабка Берта самолично выдала её за Виктора Ниссона, соединив обе ветви Бертидов. Прабабушку очень чтит и постоянно с ней связывался.' }
+              ]}
+          ]},
+        { id:'bertn', name:'Берт Ниссон', years:'146 — 167', sex:'m', tag:'бастард',
+          note:'Отец — островитянин Торн Ниссон, обманувший Берту: выдавал себя за Нирсона, представителя древней знати. Годы спустя Торн начал помогать сыну, заглаживая вину, — его с тех пор дела шли неважно. Берт прожил недолгую, но мудрую жизнь и простил обоих. Пал вместе с Торном в одном бою за страну Келиев в южных краях.',
+          children:[
+            { id:'arnold', name:'Арнольд Ниссон', years:'166 — 189', sex:'m', tag:'бастард',
+              note:'Мать — островитянка, прибывшая с Торном, но не пожелавшая с ним остаться. Рос с бабушкой Бертой, стал придворным при Фьордлинге, дослужился до конюшенного. Пал на скачках. Успел зачать дитя и вступить в союз с Вероникой, служанкой двора Фьордлинга.',
+              children:[
+                { id:'victor', name:'Виктор Ниссон', years:'189 — 200-е', sex:'m',
+                  note:'Рождён в год гибели Арнольда. В 206-м бабка Берта самолично поженила его с четвероюродной сестрой Вадой Жефрансуа — так соединились обе ветви Бертидов. Дочь Мишель — единый потомок Бертидов.',
+                  spouse:{ id:'vada', name:'Вада Жефрансуа', years:'? — 200-е', sub:'супруга · дочь Эльберта Жефрансуа',
+                    note:'Дочь Эльберта, правнучка Берты; четвероюродная сестра и супруга Виктора Ниссона. Мать баронессы Мишель.' },
+                  children:[
+                    { id:'michel', name:'Мишель Викторовна Ниссон', years:'209 — н.в.', sex:'f', tag:'баронесса Жефрануса',
+                      note:'Дочь Виктора и Вады, единый потомок Бертидов. Владеет замком Жефрануса в южной Вартемберии, на границе с Ягарлонией и Окурком, — независимый правитель: бабка Берта постаралась ради такой автономии. Довольно крепка и активно развивает своё баронство; желает присоединиться к Ягарлонии, а лучше — к Яльве, ибо Ягарлония воспринимается как буфер Яльвы. Помолвлена с бардом Ерорием и постоянно вызывает лекарей — чтобы её будущий барон не кончил земной путь раньше времени.' }
+                  ]}
+              ]}
+          ]}
+      ]},
+
+    { id:'loretta', name:'Лоретта Роббертс', years:'108 — 150', group:'daughters',
+      note:'Бежала на поиски отца — и остановилась в одной вартемберской деревне: влюбилась в крестьянина Джека, с которым провела остаток дней. Пала в одном из набегов вражеского войска.',
+      spouse:{ id:'jack', name:'Джек', years:'—', sub:'супруг · крестьянин' },
+      children:[
+        { id:'john', name:'Джон Роббертс', years:'150 — н.в.',
+          note:'Доказал, что он Роббертс. Поселился в Покирстоде и учит в местном университете вартемберскому языку; с родственниками переселяться не хочет — помнит рассказы матери о том, как там относились к Уильяму. Женился на обычной горожанке; сын Андрей продолжает курс отца.',
+          spouse:{ id:'gorozhanka', name:'Горожанка', years:'—', sub:'супруга · обычная горожанка',
+            note:'Обычная горожанка, ставшая женой Джона. Мать Андрея.' },
+          children:[
+            { id:'andrej', name:'Андрей Джонович Роббертс', years:'180 — н.в.', tag:'преподаватель · помолвлен с Дэниэлой',
+              note:'Обычный преподаватель вартемберского в Яльвинском университете, продолжает курс отца. Помолвлен с Дэниэлой Мырлеанской — разница в шестьдесят лет; растит помолвленную как воспитанницу (вартемберский метод, в Яльве редкий, но дозволенный, пока воспитанница не станет крестной дочерью). Понимает: обилие инцеста в её крови может испортить кровь Роббертсов — её родители пали именно от подобных заболеваний. Презирает власть своей родни в лице Гальяны и Джейкоба — считает их узурпаторами, тиранами и диктаторами — и иметь с ними дел не хочет совсем.' }
+          ]}
+      ]},
+
+    { id:'shirley', name:'Ширли Роббертс', years:'112 — н.в.', group:'daughters',
+      note:'На волне успеха старших братьев присоединилась к семейному делу — делает украшения для предметов: красивые рукояти для мечей и тому подобное, главное — чтобы сохраняли качество и могли применяться по назначению. Больше всех прочих провела времени со старшими членами династии — и потому именно она, ведомая Идеей Сильнейшего, укрепляла породнение своих потомков. Живёт в Леске, Яльвинском бандитском городе пронии Спендеркука Кекешина, — ради возлюбленного.',
+      spouse:{ id:'kloyd', name:'Клойд Мырлеанский', years:'—', sub:'союз · возлюбленный',
+        note:'Прошёл огромный путь авантюр со Спендеркуком Кекешиным — начиная с нашествия подгорьцев. Дочь при Покирстодовом дворе устроил через свои связи; за неё порвёт любого. Покрывает сына-контрабандиста.' },
+      children:[
+        { id:'arthurm', name:'Артур Мырлеанский', years:'165 — н.в.', sex:'m',
+          note:'Торгует контрабандой — Клойд его покрывает и поныне. В 188-м сразу четверо детей: Алина, Полина, Владимир и Владислав — имена на яльвинский манер: семья стала Покирстодовеющей.',
+          children:[
+            { id:'alina', name:'Алина Мырлеанская', years:'188 — н.в.',
+              note:'В начале двухсотых кузены и кузины породнились: её дочь стала женой сына Владислава.' },
+            { id:'polina', name:'Полина Мырлеанская', years:'188 — н.в.',
+              note:'В начале двухсотых её сын взял в жёны дочь Владимира.' },
+            { id:'vladimir', name:'Владимир Мырлеанский', years:'188 — н.в.', sex:'m',
+              note:'В начале двухсотых его дочь вышла за сына Полины.' },
+            { id:'vladislav', name:'Владислав Мырлеанский', years:'188 — н.в.', sex:'m',
+              note:'В начале двухсотых его сын женился на дочери Алины.' }
+          ]},
+        { id:'shirleyd', name:'Дочь Ширли', years:'167 — н.в.', tag:'имя неизвестно · фрейлина',
+          note:'Фрейлина при Покирстодовом дворе — отец устроил её туда ввиду своих связей. В 200-м родила дочь Ширли — род продолжился по женской линии.',
+          children:[
+            { id:'shirley2', name:'Ширли Роббертс', years:'200 — н.в.', tag:'дочь фрейлины',
+              note:'Родила Ширли в 220-м — линия дочерей Ширли продолжается.' }
+          ]}
+      ]},
+
+    /* ── ПРИЁМНЫЕ ── */
+    { id:'petro', name:'Петро Роббертс', years:'? — 131', group:'adopted', tag:'приёмный сын',
+      note:'Старший приёмный сын. Стал торговцем в Покирстоде.',
+      children:[
+        { id:'vuala', name:'Вуала Роббертс', years:'? — 181', tag:'приёмный внук',
+          note:'Продолжил дело Петро — и в последний момент передумал избавляться от вещей Уильяма Роббертса.',
+          children:[
+            { id:'wilhelm', name:'Вильгельм Роббертс', years:'116 — н.в.',
+              note:'Руководит торговым делом. Детей не имеет.' }
+          ]}
+      ]},
+
+    { id:'alexandro', name:'Александо Роббертс', years:'? — н.в.', group:'adopted', tag:'приёмный сын',
+      note:'В отличие от Петро живёт уже более полутора веков: магическая кровь позволяет ему в среднем двести лет. Заклинания использует крайне осторожно. Хотя прямым потомком Уильяма не является — оказывается крайне сильным магом в Яльвинских краях.' }
+  ]
+  }
+  ]
+  }
+]
+};
+
+/* узел, чьи дети образуют основные линии рода (сыновья/дочери/приёмные Уильяма):
+   скобки групп, заглушки «время покажет» и поиск ветви строятся от него */
+const MAIN = (()=>{ let n=TREE; while(!((n.children||[]).some(c=>c.group && c.group!=='root')) && (n.children||[]).length===1) n=n.children[0]; return n; })();
+
+/* дочерняя ветвь Ширли: третья Ширли, её муж и Дэниэла */
+(function(){
+  const s2 = MAIN.children.find(c=>c.id==='shirley').children.find(c=>c.id==='shirleyd').children[0];
+  s2.children = [
+    { id:'shirley3', name:'Ширли Роббертс', years:'220 — 240-е', tag:'жена Егора',
+      note:'Третья Ширли подряд. Вышла за Егора Мырлеанского — праправнука Артура Мырлеанского по линиям Владислава, Алины, Полины и Владимира, чьи семьи породнились в начале двухсотых и вновь в 220-е, ведомые Идеей Сильнейшего. Незадолго до подгорьского бунта родила Дэниэлу. Пала — как и Егор — от наследственных болезней, снедавших линию из-за обилия инцеста.',
+      spouse:{ id:'egor', name:'Егор Мырлеанский', years:'? — 240-е', sub:'супруг · праправнук Артура Мырлеанского',
+        note:'Потомок четырёх ветвей детей Артура Мырлеанского: его родители — внучка Владислава-и-Алины и внук Владимира-и-Полины, породнившиеся в 220-е по Идее Сильнейшего. Пал от наследственной болезни. По линии этой ветви Ширлитиды пали в бандитских разборках Леска, частью — в войнах, интригах и покушениях.' },
+      children:[
+        { id:'daniela', name:'Дэниэла Егоровна Роббертс', years:'240 — н.в.', tag:'помолвлена с Андреем',
+          note:'Крайне болезненна: и Егор, и Ширли пали от наследственных заболеваний, копившихся от инцестных браков Ширлитидов. Помолвлена с Андреем Джоновичем Роббертсом — разница в шестьдесят лет; Андрей заботится о ней, понимая риск её крови. Помолвку не может разорвать никто: линия ещё не совсем едина, но этот союз — её замок.' }
+      ]}
+  ];
+})();
+
+/* помолвки родичей — соединяют линии; рисуются золотыми пунктирными дугами с кольцами */
+const ENGAGED = [
+  { a:'mark',   b:'egoriya', note:'барон Бендгрегарии и герцогиня Таррестивии — так соединятся первая и вторая линии' },
+  { a:'giiy',   b:'jikia',   note:'архонт растит наречённую — соединятся третья и четвёртая линии' },
+  { a:'michel', b:'eroriy',  note:'баронесса ждёт, когда наречённый подрастёт — Бертиды и Артуриды соединятся' },
+  { a:'andrej', b:'daniela', note:'разница в шестьдесят лет; помолвку не разорвать никому — замок седьмой линии' }
+];
+
+
+/* ═══════════ 2. ИНДЕКСЫ И КОНСТАНТЫ ═══════════ */
+
+const $ = s => document.querySelector(s);
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const ease = t => t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX'];
+
+const CW=186, CH=64, PGAP=12, BGAP=34, UEXT=22, COL=CW+96, HALF=CH/2, MARG2=40;
+
+const people = new Map();
+const parentOf = new Map();
+let maxGen = 0;
+const rootIdx = new Map();
+
+const rootOf = new Map();
+(function walk(n, parent, gen){
+  n.gen = gen;
+  if(!n.group) n.group = parent ? parent.group : 'root';
+  maxGen = Math.max(maxGen, gen);
+  people.set(n.id, {p:n, owner:n, isSpouse:false});
+  rootOf.set(n.id, TREE);
+  if(n.spouse){ people.set(n.spouse.id, {p:n.spouse, owner:n, isSpouse:true}); rootOf.set(n.spouse.id, TREE); }
+  if(n.prevSpouses){ n.prevSpouses.forEach(s => { people.set(s.id, {p:s, owner:n, isSpouse:true}); rootOf.set(s.id, TREE); }); }
+  if(parent) parentOf.set(n.id, parent);
+  (n.children||[]).forEach(c => walk(c, n, gen+1));
+})(TREE, null, 0);
+
+/* родовые кланы супруг (династии Кадас и Сар): свои люди и своя генеалогия,
+   вплетённые в общую сетку поколений Роббертсов: col0 — колонка прародителя
+   (одна с Роббертом), gshift — пропуск безымянных колён до известного поколения */
+function walkClan(root, anchorId){
+  root.anchor = anchorId;
+  (function w(n, parent, g){
+    n.gen = (root.col0 || 0) + g + (g > 0 ? (root.gshift || 0) : 0);   /* колонна общей сетки */
+    n.cgen = g;                          /* поколение внутри династии */
+    n.group = root.group;
+    people.set(n.id, {p:n, owner:n, isSpouse:false});
+    rootOf.set(n.id, root);
+    if(n.spouse){ people.set(n.spouse.id, {p:n.spouse, owner:n, isSpouse:true}); rootOf.set(n.spouse.id, root); }
+    if(parent && g > 0) parentOf.set(n.id, parent);   /* у корня династии «родителя» нет */
+    (n.children||[]).forEach(c => w(c, n, g+1));
+  })(root, null, 0);
+}
+(function findClans(n){
+  if(n.spouse && n.spouse.clan) walkClan(n.spouse.clan, n.spouse.id);
+  if(n.prevSpouses) n.prevSpouses.forEach(s => { if(s.clan) walkClan(s.clan, s.id); });
+  (n.children||[]).forEach(findClans);
+})(TREE);
+
+TREE.children.forEach((c,i) => rootIdx.set(c.id, i));
+
+function descCount(n){ let s=0; (n.children||[]).forEach(c => s += 1 + descCount(c)); return s; }
+
+ const BLOOD = (()=>{ let s=0; (function f(n){ s++; (n.children||[]).forEach(f); })(TREE); return s; })();
+$('#stats').innerHTML =
+  '<div class="stat" title="Кровных Роббертсов: ' + BLOOD + ' · супругов и прочей родни: ' + (people.size-BLOOD) + '"><b>' + people.size + '</b><i>имён</i></div>' +
+  '<div class="stat" title="Прямые потомки родоначальника по всем ветвям, без супругов"><b>' + descCount(TREE) + '</b><i>потомков</i></div>' +
+  '<div class="stat"><b>' + (maxGen+1) + '</b><i>поколений</i></div>';
+
+/* ═══════════ 3. РАСКЛАДКА (полосная: перекрытия исключены) ═══════════ */
+
+let collapsed = new Set();
+(function foldFrom(n){
+  (n.children||[]).forEach(c => {
+    if(c.children && c.children.length) collapsed.add(c.id);
+    foldFrom(c);
+  });
+})(TREE);
+
+const pairRows = n => 1 + (n.spouse?1:0) + (n.prevSpouses ? n.prevSpouses.length : 0);
+const pairH = n => CH*pairRows(n) + PGAP*(pairRows(n)-1);
+
+const clanH = sp => (sp && sp.clan) ? subH(sp.clan) + BGAP : 0;
+
+/* веер потомков пары с династией делится на стек НАД парой и стек ПОД ней так,
+   чтобы пара (с её параллельным стволом династии) встала как можно ближе
+   к середине веера, а не скраю; target — поправка на высоту ствола */
+function clanSplitH(kids, target){
+  const hs = kids.map(subH), n = kids.length, pre = [0];
+  for(let i=0;i<n;i++) pre.push(pre[i]+hs[i]);
+  const stackH = (i,j) => (pre[j]-pre[i]) + (j-i>1 ? (j-i-1)*BGAP : 0);
+  let best = 0, bd = Infinity;
+  for(let k=0;k<=n;k++){
+    const d = Math.abs((stackH(0,k) - stackH(k,n)) - (target||0));
+    if(d < bd){ bd = d; best = k; }
+  }
+  return { aH: stackH(0,best), bH: stackH(best,n), k: best };
+}
+
+function subH(n){
+  const ch = clanH(n.spouse);
+  const kids = collapsed.has(n.id) ? [] : (n.children||[]);
+  if(!kids.length) return pairH(n) + ch;
+  if(ch){
+    /* блок: [стек над] + пара + ствол династии + [стек под] */
+    const s = clanSplitH(kids, subH(n.spouse.clan) - BGAP);
+    return (s.k > 0 ? s.aH + BGAP : 0) + pairH(n) + BGAP + subH(n.spouse.clan) +
+           (s.k < kids.length ? BGAP + s.bH : 0);
+  }
+  const inner = kids.reduce((s,c)=>s+subH(c),0) + BGAP*(kids.length-1);
+  return Math.max(pairH(n), inner);
+}
+
+function computeLayout(){
+  const pos = new Map(), links = [], unions = [];
+  (function place(n, yTop){
+    const ph   = pairH(n);
+    const x    = n.gen * COL;
+    const ch   = clanH(n.spouse);
+    const kids = collapsed.has(n.id) ? [] : (n.children||[]);
+    let yc;
+    if(!kids.length){
+      yc = yTop + ph/2;
+    } else if(ch){
+      /* пара с династией — посередине веера потомков: старшие дети стеком выше,
+         младшие — ниже, а ствол династии идёт параллельной линией прямо под парой */
+      const s = clanSplitH(kids, subH(n.spouse.clan) - BGAP);
+      let y = yTop;
+      for(let i=0;i<s.k;i++){
+        place(kids[i], y);
+        links.push({from:n, child:kids[i]});
+        y += subH(kids[i]) + BGAP;
+      }
+      yc = y + ph/2;
+      let yb = yc + ph/2 + BGAP + subH(n.spouse.clan) + BGAP;
+      for(let i=s.k;i<kids.length;i++){
+        place(kids[i], yb);
+        links.push({from:n, child:kids[i]});
+        yb += subH(kids[i]) + BGAP;
+      }
+    } else {
+      const inner = kids.reduce((s,c)=>s+subH(c),0) + BGAP*(kids.length-1);
+      const base = inner < ph ? (ph - inner)/2 : 0;
+      let y = yTop + base;
+      const centers = [];
+      for(const c of kids){
+        centers.push(place(c, y));
+        links.push({from:n, child:c});
+        y += subH(c) + BGAP;
+      }
+      yc = inner >= ph ? (centers[0] + centers[centers.length-1]) / 2 : yTop + ph/2;
+      yc = clamp(yc, yTop + ph/2, yTop + Math.max(ph, base + inner) - ph/2);
+    }
+    pos.set(n.id, {x, y: yc - ph/2});
+    if(n.spouse) pos.set(n.spouse.id, {x, y: yc - ph/2 + (CH+PGAP)});
+    if(n.prevSpouses) n.prevSpouses.forEach((s,i)=> pos.set(s.id, {x, y: yc - ph/2 + (i+2)*(CH+PGAP)}));
+    if(n.spouse && n.spouse.clan){
+      /* нить династии: от отца супруги (в клане) к её карточке в древе Роббертсов */
+      const bf = n.spouse.clan.bridge && people.get(n.spouse.clan.bridge.from);
+      links.push({from: bf ? bf.p : n.spouse.clan, child: n.spouse, clan:true});
+      place(n.spouse.clan, yc + ph/2 + BGAP);
+    }
+    unions.push({node:n});
+    return yc;
+  })(TREE, 0);
+  return {pos, links, unions};
+}
+
+function unionPt(pos, n){
+  const pa = pos.get(n.id);
+  if(!pa) return null;
+  return { x: pa.x + CW + (n.spouse?UEXT:0), y: pa.y + (n.spouse ? CH + PGAP/2 : HALF) };
+}
+
+function linkD(u, c){
+  const x1=u.x, y1=u.y, x2=c.x, y2=c.y;
+  const midX = (x1+x2)/2;
+  if(Math.abs(y2-y1) < .5) return 'M'+x1+' '+y1+' H'+x2;
+  const s = y2>y1 ? 1 : -1;
+  const r = Math.min(13, Math.abs(y2-y1)/2, Math.abs(midX-x1));
+  return 'M'+x1+' '+y1+' H'+(midX-r)+' Q'+midX+' '+y1+' '+midX+' '+(y1+s*r)+' V'+(y2-s*r)+' Q'+midX+' '+y2+' '+(midX+r)+' '+y2+' H'+x2;
+}
+
+/* ═══════════ 4. DOM: карточки и кружки ═══════════ */
+
+const viewport=$('#viewport'), stage=$('#stage'), svgEl=$('#links');
+const cardEls = new Map(), chipEls = new Map();
+let curPos = new Map();
+
+/* заголовки кланов — создаются один раз, позиционируются в renderFrame */
+const clanTitles = new Map();
+function updateClanTitles(){
+  for(const [spId, root] of [['kadas',KADAS_TREE],['ofelia',SAR_TREE]]){
+    let el = clanTitles.get(spId);
+    if(!el){
+      el = document.createElement('div');
+      el.className = 'glabel';
+      el.textContent = root.dname + ' · I поколение сетки';
+      stage.appendChild(el);
+      clanTitles.set(spId, el);
+    }
+    const p = curPos.get(root.id);
+    if(!p){ el.style.display='none'; continue; }
+    el.style.display='';
+    el.style.cssText += ';left:' + (p.x + CW/2) + 'px;top:' + (p.y - 26) + 'px;transform:translateX(-50%)';
+  }
+}
+
+function colorOf(id){
+  const info = people.get(id);
+  if(!info) return '#55503f';
+  return info.isSpouse ? SPOUSE_COLOR : (GROUPS[info.owner.group]||GROUPS.root).color;
+}
+
+for(const [id, info] of people){
+  const el = document.createElement('div');
+  el.className = 'node'; el.dataset.id = id;
+  const card = document.createElement('div');
+  card.className = 'card pre' + (info.isSpouse ? ' spouse' : '');
+  card.style.setProperty('--bc', colorOf(id));
+  const sub = info.isSpouse
+    ? (info.p.years + ' · ' + info.p.sub)
+    : (info.p.years + (info.p.tag ? ' · ' + info.p.tag : ''));
+  card.innerHTML = '<div class="c-name">' + info.p.name + '</div><div class="c-sub">' + sub + '</div>';
+  /* доступность: карточка — кнопка (фокус с клавиатуры, Enter/Space открывают карточку),
+     нативный тултип — имя и годы видны даже на сильном отдалении */
+  card.setAttribute('role','button');
+  card.tabIndex = 0;
+  card.setAttribute('aria-label', info.p.name + ' — открыть карточку');
+  card.title = info.p.name + ' · ' + info.p.years;
+  /* текст не режется рамкой карточки: длинные строки плавно ужимаются, крайний случай — аккуратное многоточие */
+  const nEl = card.querySelector('.c-name'), sEl = card.querySelector('.c-sub');
+  let fs = 16;
+  while(nEl && nEl.scrollWidth > nEl.clientWidth && fs > 12.5){ fs -= .5; nEl.style.fontSize = fs + 'px'; }
+  let ss = 9.5;
+  while(sEl && sEl.scrollWidth > sEl.clientWidth && ss > 8){ ss -= .25; sEl.style.fontSize = ss + 'px'; }
+  el.appendChild(card);
+  stage.appendChild(el);
+  cardEls.set(id, el);
+}
+
+for(const [id, info] of people){
+  if(info.isSpouse || !descCount(info.p)) continue;
+  const chip = document.createElement('button');
+  chip.className = 'chip pre';
+  chip.dataset.for = id;
+  chip.style.setProperty('--bc', colorOf(id));
+  stage.appendChild(chip);
+  chipEls.set(id, chip);
+}
+
+/* клавиатура: Enter/Space на сфокусированной карточке открывают её панель */
+stage.addEventListener('keydown', e=>{
+  if(e.key!=='Enter' && e.key!==' ') return;
+  const card = e.target.closest && e.target.closest('.card');
+  if(!card) return;
+  e.preventDefault();
+  const node = card.closest('.node');
+  if(node) select(node.dataset.id);
+});
+
+/* ═══════════ 5. SVG ═══════════ */
+
+const NS='http://www.w3.org/2000/svg';
+const mk=(t,cls)=>{ const e=document.createElementNS(NS,t); if(cls)e.setAttribute('class',cls); return e; };
+
+let linkRecs=[], pairRecs=[], rombRecs=[], stubRecs=[], engRecs=[], canvas={w:1000,h:1000};
+
+function rebuildSvg(L){
+  svgEl.innerHTML='';
+  linkRecs=[]; pairRecs=[]; rombRecs=[]; stubRecs=[];
+  const CRISP = 'non-scaling-stroke'; /* линии остаются тонкими при любом масштабе */
+  for(const l of L.links){
+    const p = mk('path','ln' + (l.clan ? ' clan' : ''));
+    p.setAttribute('stroke', l.clan ? colorOf(l.from.id) : colorOf(l.child.id));
+    p.setAttribute('vector-effect', CRISP);
+    svgEl.appendChild(p);
+    linkRecs.push({el:p, ownerId:l.from.id, childId:l.child.id, clan:!!l.clan});
+  }
+  for(const u of L.unions){
+    const n = u.node;
+    if(n.spouse){
+      for(const w of ['a','b','v']){
+        const t = mk('path','ln'); t.setAttribute('stroke','#6e6552');
+        t.setAttribute('vector-effect', CRISP);
+        svgEl.appendChild(t);
+        pairRecs.push({el:t, ownerId:n.id, spouseId:n.spouse.id, which:w});
+      }
+    }
+    if(n.prevSpouses){
+      for(const s of n.prevSpouses){
+        for(const w of ['b','v']){
+          const t = mk('path','ln prev'); t.setAttribute('stroke','#6e6552');
+          t.setAttribute('vector-effect', CRISP);
+          svgEl.appendChild(t);
+          pairRecs.push({el:t, ownerId:n.id, spouseId:s.id, which:w});
+        }
+      }
+    }
+    const r = mk('path','dia');
+    r.setAttribute('d','M0 -4.5 L4.5 0 L0 4.5 L-4.5 0 Z');
+    r.setAttribute('fill', n.spouse ? '#c8a565' : '#14110c');
+    if(!n.spouse) r.setAttribute('stroke','#6e6552');
+    svgEl.appendChild(r);
+    rombRecs.push({el:r, ownerId:n.id});
+  }
+  for(const c of MAIN.children){
+    if(descCount(c) || c.noStub) continue;
+    const h = mk('path','ln stub'); h.setAttribute('stroke','#6e6552');
+    h.setAttribute('vector-effect', CRISP);
+    svgEl.appendChild(h);
+    stubRecs.push({el:h, ownerId:c.id});
+  }
+  for(const e of ENGAGED){
+    const p = mk('path','ln eng');
+    p.setAttribute('stroke','#c8a565');
+    p.setAttribute('vector-effect', CRISP);
+    svgEl.appendChild(p);
+    const g = mk('g','engring');
+    const r1 = mk('circle'), r2 = mk('circle');
+    r1.setAttribute('r','4.4'); r2.setAttribute('r','4.4');
+    r1.setAttribute('cx','-2.3'); r2.setAttribute('cx','2.3');
+    g.appendChild(r1); g.appendChild(r2);
+    svgEl.appendChild(g);
+    engRecs.push({el:p, ring:g, a:e.a, b:e.b});
+  }
+}
+
+function updateSvg(pos){
+  for(const r of linkRecs){
+    const pa = pos.get(r.ownerId), pc = pos.get(r.childId);
+    if(!pa || !pc){ r.el.setAttribute('d',''); continue; }
+    const n = people.get(r.ownerId).owner;
+    r.el.setAttribute('d', linkD(unionPt(pos,n), {x:pc.x, y:pc.y+HALF}));
+  }
+  for(const r of pairRecs){
+    const pa = pos.get(r.ownerId);
+    if(!pa){ r.el.setAttribute('d',''); continue; }
+    const pb = pos.get(r.spouseId);
+    if(!pb){ r.el.setAttribute('d',''); continue; }
+    const ux = pa.x + CW + UEXT/2;
+    let d = '';
+    if(r.which==='a') d = 'M'+(pa.x+CW)+' '+(pa.y+HALF)+' H'+ux;
+    else if(r.which==='b') d = 'M'+(pb.x+CW)+' '+(pb.y+HALF)+' H'+ux;
+    else d = 'M'+ux+' '+(pa.y+HALF)+' V'+(pb.y+HALF);
+    r.el.setAttribute('d', d);
+  }
+  for(const r of rombRecs){
+    const u = unionPt(pos, people.get(r.ownerId).owner);
+    if(u){ r.el.setAttribute('transform','translate('+u.x+','+u.y+')'); r.el.removeAttribute('display'); }
+    else r.el.setAttribute('display','none');
+  }
+  for(const r of stubRecs){
+    const pa = pos.get(r.ownerId);
+    r.el.setAttribute('d', pa ? 'M'+(pa.x+CW)+' '+(pa.y+HALF)+' H'+(pa.x+CW+44) : '');
+  }
+  for(const r of engRecs){
+    const pa = pos.get(r.a), pb = pos.get(r.b);
+    if(!pa || !pb){ r.el.setAttribute('d',''); r.ring.setAttribute('display','none'); continue; }
+    const ax=pa.x+CW/2, ay=pa.y+HALF, bx=pb.x+CW/2, by=pb.y+HALF;
+    const sx = bx>=ax ? 1 : -1, dx = Math.max(70, Math.abs(bx-ax)*.3);
+    r.el.setAttribute('d', 'M'+ax+' '+ay+' C'+(ax+sx*dx)+' '+ay+' '+(bx-sx*dx)+' '+by+' '+bx+' '+by);
+    const mx=(ax+3*(ax+sx*dx)+3*(bx-sx*dx)+bx)/8, my=(ay+3*ay+3*by+by)/8;
+    r.ring.setAttribute('transform','translate('+mx+','+my+')');
+    r.ring.removeAttribute('display');
+  }
+}
+
+let glWrap = null;
+function drawGroupLabels(){
+  if(glWrap){ glWrap.remove(); glWrap = null; }
+  const wrap = document.createElement('div');
+  let i = 0;
+  while(i < MAIN.children.length){
+    const g = MAIN.children[i].group;
+    let j = i;
+    while(j < MAIN.children.length && MAIN.children[j].group === g) j++;
+    const p1 = curPos.get(MAIN.children[i].id);
+    const p2 = curPos.get(MAIN.children[j-1].id);
+    if(p1 && p2){
+      const y1 = p1.y, y2 = p2.y + CH;
+      const br = document.createElement('div');
+      br.className = 'bracket';
+      br.style.cssText = 'left:' + (p1.x - 14) + 'px;top:' + y1 + 'px;height:' + (y2-y1) + 'px';
+      wrap.appendChild(br);
+      const lb = document.createElement('div');
+      lb.className = 'glabel';
+      lb.style.cssText = 'left:' + (p1.x - 27) + 'px;top:' + ((y1+y2)/2) +
+        'px;transform:translate(-50%,-50%) rotate(-90deg)';
+      lb.textContent = GROUPS[g].name + ' · ' + (j-i);
+      wrap.appendChild(lb);
+    }
+    i = j;
+  }
+  if(wrap.childNodes.length){
+    glWrap = wrap;
+    stage.appendChild(glWrap);
+  }
+}
+
+for(const c of MAIN.children){
+  if(descCount(c) || c.noStub) continue;
+  const lb = document.createElement('div');
+  lb.className = 'stublabel late';
+  lb.dataset.for = c.id;
+  lb.textContent = 'время покажет';
+  stage.appendChild(lb);
+  c._stubEl = lb;
+}
+
+function updateStubs(){
+  for(const c of MAIN.children){
+    if(!c._stubEl) continue;
+    const p = curPos.get(c.id);
+    if(!p){ c._stubEl.style.display='none'; continue; }
+    c._stubEl.style.display='';
+    c._stubEl.style.left = (p.x+CW+52) + 'px';
+    c._stubEl.style.top = (p.y+HALF) + 'px';
+    c._stubEl.style.transform = 'translateY(-50%)';
+    c._stubEl.classList.toggle('dimmed', !!selected && selected!==c.id);
+  }
+}
+
+let genWrap = null;
+function drawGenGuides(){
+  if(genWrap){ genWrap.remove(); genWrap = null; }
+  const bands = new Map();
+  let minY = 1e9, maxY = -1e9;
+  for(const [id,p] of curPos){
+    const info = people.get(id);
+    if(info.isSpouse) continue;
+    if(rootOf.get(id) !== TREE) continue; /* гайды поколений — только древо Роббертсов */
+    const g = info.p.gen;
+    const b = bands.get(g);
+    if(b){ b.minY = Math.min(b.minY,p.y); b.maxY = Math.max(b.maxY,p.y+CH); }
+    else bands.set(g, {minY:p.y, maxY:p.y+CH});
+    minY = Math.min(minY,p.y); maxY = Math.max(maxY,p.y+CH);
+  }
+  if(bands.size < 2 || maxY < 0) return;
+  const wrap = document.createElement('div');
+  const y0 = Math.round(minY), y1 = Math.round(maxY);
+  for(const g of bands.keys()){
+    if(g === 0) continue;
+    const gx = Math.round(g*COL - (COL-CW)/2);
+    const ln = document.createElement('div');
+    ln.className = 'genline';
+    ln.style.cssText = 'left:'+gx+'px;top:'+y0+'px;height:'+(y1-y0)+'px';
+    wrap.appendChild(ln);
+    const lb = document.createElement('div');
+    lb.className = 'genlabel';
+    lb.textContent = ROMAN[g] + ' поколение';
+    lb.style.cssText = 'left:'+(gx-30)+'px;top:'+Math.round((y0+y1)/2)+'px';
+    wrap.appendChild(lb);
+  }
+  stage.appendChild(wrap);
+  genWrap = wrap;
+}
+
+function renderFrame(){
+  for(const [id,p] of curPos){
+    const el = cardEls.get(id);
+    if(el) el.style.transform = 'translate('+p.x+'px,'+p.y+'px)';
+  }
+  for(const [id,chip] of chipEls){
+    const n = people.get(id).owner;
+    const p = curPos.get(id);
+    const u = p ? unionPt(curPos, n) : null;
+    if(!u){ chip.style.display='none'; continue; }
+    chip.style.display='';
+    chip.style.transform = 'translate(' + (u.x+14) + 'px,' + (u.y-13) + 'px)';
+    const hid = collapsed.has(id);
+    chip.textContent = hid ? descCount(n) : '–';
+    chip.classList.toggle('open', !hid);
+    chip.title = hid ? 'Развернуть ветвь — потомков: ' + descCount(n) : 'Свернуть ветвь';
+  }
+  updateSvg(curPos);
+  let x2=0, y2=0;
+  for(const p of curPos.values()){ x2=Math.max(x2,p.x+CW); y2=Math.max(y2,p.y+CH); }
+  if(x2>0){ canvas = {w:x2+140, h:y2+MARG2*2}; }
+  drawGroupLabels();
+  drawGenGuides();
+  updateClanTitles();
+}
+
+/* ═══════════ 6. АНИМАЦИИ ВИДА ═══════════ */
+
+let rafId=0, viewRaf=0, view={x:0,y:0,k:1};
+const KMIN=.08, KMAX=2.6, LOGK=Math.log(KMAX/KMIN);
+var zSlider=null, zValEl=null, zSlideLock=false;
+
+/* полотно не теряется: всегда видна полоса древа шириной ~150px, но пан свободен */
+function clampView(){
+  const r = viewport.getBoundingClientRect();
+  const w = canvas.w*view.k, h = canvas.h*view.k;
+  const mx = 150, my = 130;
+  const lox = mx - w, hix = r.width - mx;
+  view.x = (lox <= hix) ? clamp(view.x, lox, hix) : (r.width - w)/2;
+  const loy = my - h, hiy = r.height - my;
+  view.y = (loy <= hiy) ? clamp(view.y, loy, hiy) : (r.height - h)/2;
+}
+
+function updateZoomUI(){
+  if(!zSlider || zSlideLock) return;
+  zSlider.value = Math.round(1000*Math.log(view.k/KMIN)/LOGK);
+  zValEl.textContent = Math.round(view.k*100)+'%';
+}
+
+/* после зума Chromium может оставить растровую текстуру текста старого масштаба («мыло»):
+   через паузу инвалидируем отрисовку текстовых элементов — перерастеряются резко */
+let repaintT = null;
+function scheduleRepaint(){
+  if(repaintT) clearTimeout(repaintT);
+  repaintT = setTimeout(()=>{
+    repaintT = null;
+    stage.classList.add('repaint');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>stage.classList.remove('repaint')));
+  }, 180);
+}
+const applyView = () => { clampView(); stage.style.transform = 'translate('+view.x+'px,'+view.y+'px) scale('+view.k+')'; updateStubs(); updateZoomUI(); scheduleRepaint(); };
+
+function tweenTo(target){
+  cancelAnimationFrame(rafId);
+  const from = curPos, t0 = performance.now(), dur = 520;
+  const ids = new Set([...from.keys(), ...target.keys()]);
+  function step(t){
+    const k = ease(Math.min(1,(t-t0)/dur));
+    const m = new Map();
+    ids.forEach(id=>{
+      const a=from.get(id), b=target.get(id);
+      if(!b) return;
+      m.set(id, a ? {x:a.x+(b.x-a.x)*k, y:a.y+(b.y-a.y)*k} : b);
+    });
+    curPos = m; renderFrame();
+    if(k<1) rafId = requestAnimationFrame(step);
+    else { curPos = target; renderFrame(); }
+  }
+  rafId = requestAnimationFrame(step);
+}
+
+function tweenView(t,dur){
+  dur = dur||550;
+  cancelAnimationFrame(viewRaf);
+  const from={x:view.x,y:view.y,k:view.k}, t0=performance.now();
+  (function step(now){
+    const k = ease(Math.min(1,(now-t0)/dur));
+    view.x = from.x+(t.x-from.x)*k;
+    view.y = from.y+(t.y-from.y)*k;
+    view.k = from.k+(t.k-from.k)*k;
+    applyView();
+    if(k<1) viewRaf = requestAnimationFrame(step);
+  })(t0);
+}
+
+function fitView(anim){
+  const vp = viewport.getBoundingClientRect();
+  const k = clamp(Math.min((vp.width-90)/canvas.w, (vp.height-80)/canvas.h), KMIN, 1.2);
+  const t = {k, x:(vp.width-canvas.w*k)/2, y:(vp.height-canvas.h*k)/2};
+  anim ? tweenView(t,600) : (view=t, applyView());
+}
+
+function centerOn(p){
+  const vp = viewport.getBoundingClientRect();
+  const k = Math.max(view.k, .8);
+  tweenView({k, x:vp.width/2-(p.x+CW/2)*k, y:vp.height/2-(p.y+HALF)*k},560);
+}
+
+/* ═══════════ 7. РАСКРЫТИЕ ВЕТВЕЙ ═══════════ */
+
+function syncExpandBtn(){
+  const expandedAll = collapsed.size === 0;
+  const t = expandedAll ? 'Свернуть ветви' : 'Развернуть всё';
+  const lbl = $('#btnExpand .bt-label');
+  if(lbl) lbl.textContent = t; else $('#btnExpand').textContent = t;
+  const b = $('#btnExpand');
+  b.title = t; b.setAttribute('aria-label', t);
+}
+
+function reveal(target, animate){
+  const newly = [];
+  for(const [id,el] of cardEls){
+    const show = target.pos.has(id);
+    if(show && el.style.display === 'none') newly.push(id);
+    el.style.display = show ? '' : 'none';
+  }
+  rebuildSvg(target);
+  if(animate && curPos.size){
+    newly.forEach(id => cardEls.get(id).firstChild.classList.add('pre'));
+    tweenTo(target.pos);
+    setTimeout(()=> newly.forEach(id => cardEls.get(id).firstChild.classList.remove('pre')), 30);
+  } else {
+    curPos = target.pos; renderFrame();
+  }
+  if(selected && !target.pos.has(selected)) deselect();
+  applyHighlight();
+  syncExpandBtn();
+}
+
+function relayout(animate){
+  reveal(computeLayout(), animate);
+}
+
+ $('#btnExpand').addEventListener('click', ()=>{
+  if(collapsed.size === 0){
+    collapsed.clear();
+    (function f(n){ (n.children||[]).forEach(c=>{ if(c.children&&c.children.length) collapsed.add(c.id); f(c); }); })(TREE);
+  } else {
+    collapsed.clear();
+  }
+  relayout(true);
+});
+
+function toggleBranch(id){
+  collapsed.has(id) ? collapsed.delete(id) : collapsed.add(id);
+  relayout(true);
+}
+
+/* ═══════════ 8. ВЫДЕЛЕНИЕ И ПАНЕЛЬ ═══════════ */
+
+let selected = null;
+
+function highlightSet(id){
+  const info = people.get(id), set = new Set(), owner = info.owner;
+  const addSp = n => { if(n.spouse){ set.add(n.spouse.id); if(n.spouse.clan){ set.add(n.spouse.clan.id); down(n.spouse.clan); } } if(n.prevSpouses) n.prevSpouses.forEach(s=>set.add(s.id)); };
+  const down = n => { (n.children||[]).forEach(c=>{ set.add(c.id); addSp(c); down(c); }); };
+  set.add(owner.id); addSp(owner);
+  down(owner);
+  /* выбран член династии-клана — подсвечиваем и нить к супруге, и её пару */
+  const rt = rootOf.get(id);
+  if(rt && rt !== TREE && rt.anchor){
+    set.add(rt.anchor);
+    const an = people.get(rt.anchor);
+    if(an){ set.add(an.owner.id); addSp(an.owner); }
+  }
+  let cur = owner;
+  while(parentOf.has(cur.id)){
+    const par = parentOf.get(cur.id);
+    set.add(par.id); addSp(par);
+    cur = par;
+  }
+  return set;
+}
+
+function applyHighlight(){
+  const set = selected ? highlightSet(selected) : null;
+  for(const [id,el] of cardEls){
+    el.classList.toggle('sel', id===selected);
+    el.classList.toggle('dim', !!set && !set.has(id));
+  }
+  for(const [id,el] of chipEls) el.classList.toggle('dim', !!set && !set.has(id));
+  for(const r of linkRecs){
+    r.el.classList.toggle('hl',  !!set && set.has(r.childId));
+    r.el.classList.toggle('dimline', !!set && !set.has(r.childId));
+  }
+  for(const r of stubRecs) r.el.classList.toggle('dimline', !!set && !set.has(r.ownerId));
+  for(const r of pairRecs) r.el.classList.toggle('dimline', !!set && !set.has(r.ownerId));
+  for(const r of rombRecs) r.el.classList.toggle('dimmed', !!set && !set.has(r.ownerId));
+  updateStubs();
+}
+
+function section(label, inner){ return '<div class="p-section"><div class="p-label">'+label+'</div>'+inner+'</div>'; }
+function linkItem(pid, name, sub, color){
+  return '<button class="p-link" data-goto="'+pid+'">' +
+    '<span class="pl-dot" style="background:'+color+'"></span>' +
+    '<span class="pl-name">'+name+'</span>' +
+    '<span class="pl-sub">'+sub+'</span></button>';
+}
+
+function kickerOf(id){
+  const info = people.get(id);
+  const root = rootOf.get(id);
+  if(root && root !== TREE){
+    if(info.isSpouse){ const o = info.owner; return [root.dname + ' · союз с ' + o.name.split(' ')[0], colorOf(id)]; }
+    return [root.dname + ' · ' + ROMAN[info.p.gen || 0] + ' поколение', colorOf(id)];
+  }
+  if(id === TREE.id) return ['Родоначальник рода · ' + ROMAN[info.p.gen] + ' поколение', GROUPS.root.color];
+  if(id === 'william') return ['Основатель династии · ' + ROMAN[info.p.gen] + ' поколение', GROUPS.root.color];
+  if(info.isSpouse){
+    const o = info.owner;
+    return [GROUPS[o.group].name + ' · союз с ' + o.name.split(' ')[0], colorOf(id)];
+  }
+  const n = info.p;
+  if(rootIdx.has(id)) return [GROUPS[n.group].name + ' · ' + ROMAN[n.gen] + ' поколение', colorOf(id)];
+  let cur = n, head = null;
+  while(parentOf.has(cur.id)){
+    const par = parentOf.get(cur.id);
+    if(par === MAIN){ head = cur; break; }
+    cur = par;
+  }
+  const hn = head ? head.name.split(' ')[0] : '';
+  return ['Ветвь ' + hn + ' · ' + GROUPS[n.group].name + ' · ' + ROMAN[n.gen] + ' поколение', colorOf(id)];
+}
+
+/* ═══ 8a. РОДСТВО: «кем кому приходится» ═══ */
+
+const KIN = { par:new Map(), kids:new Map(), marr:[], fem:new Map() };
+(function(){
+  const FEM = new Set(['geni','margaretw','margareti','michel','mari','shirleyd','shirley2','shirley3','dirtyw','eleonora']);
+  for(const [id,info] of people){
+    const g = info.isSpouse ? null : info.p.group;
+    const sx = info.p.sex;
+    KIN.fem.set(id, sx ? sx==='f' : g==='daughters' ? true : g==='sons' ? false : FEM.has(id) ? true : /[ая]$/i.test(info.p.name.trim().split(/\s+/)[0]));
+  }
+  for(const [id,info] of people){
+    if(info.isSpouse) continue;
+    const n = info.p;
+    KIN.kids.set(id, (n.children||[]).map(c=>c.id));
+    for(const c of (n.children||[])){
+      if(!KIN.par.has(c.id)) KIN.par.set(c.id, [id]);
+      else KIN.par.get(c.id).push(id);
+      const by = ('by' in c) ? c.by : (n.spouse ? n.spouse.id : null);
+      if(by && people.has(by)) KIN.par.get(c.id).push(by);
+    }
+    /* кровные дети супруг(и) — чтобы BFS родства ходил и по маминой линии в обе стороны */
+    const byOf = c => (('by' in c) ? c.by : (n.spouse ? n.spouse.id : null));
+    if(n.spouse) KIN.kids.set(n.spouse.id, (n.children||[]).filter(c=>byOf(c)===n.spouse.id).map(c=>c.id));
+    if(n.prevSpouses) n.prevSpouses.forEach(s => KIN.kids.set(s.id, (n.children||[]).filter(c=>byOf(c)===s.id).map(c=>c.id)));
+    if(n.spouse) KIN.marr.push([id, n.spouse.id]);
+    if(n.prevSpouses) for(const s of n.prevSpouses) KIN.marr.push([id, s.id]);
+  }
+  for(const e of ENGAGED) KIN.marr.push([e.a, e.b, 'eng']);
+})();
+
+/* мосты родства через брак: родители Маргарет Кадас и Офелии Сар —
+   так калькулятор родства видит деда по «маминой линии» */
+(function(){
+  const bridge = (parents, child) => {
+    if(!people.has(child)) return;
+    const ps = parents.filter(p => people.has(p));
+    if(!ps.length) return;
+    KIN.par.set(child, ps);
+    for(const p of ps){
+      if(!KIN.kids.has(p)) KIN.kids.set(p, []);
+      if(!KIN.kids.get(p).includes(child)) KIN.kids.get(p).push(child);
+    }
+  };
+  bridge(['petrk','francisk'], 'kadas');
+  bridge(['andres','alexsandr'], 'ofelia');
+})();
+
+const KN = {
+  child:['сын','дочь','сына','дочери'],      grand:['внук','внучка','внука','внучки'],
+  great:['правнук','правнучка','правнука','правнучки'], ggreat:['праправнук','праправнучка','праправнука','праправнучки'],
+  parent:['отец','мать','отца','матери'],    gpar:['дед','бабка','деда','бабки'],
+  ggpar:['прадед','прабабка','прадеда','прабабки'], gggpar:['прапрадед','прапрабабка','прапрадеда','прапрабабки'],
+  sib:['брат','сестра','брата','сестры'],    unc:['дядя','тётя','дяди','тёти'],
+  nep:['племянник','племянница','племянника','племянницы'],
+  vnNep:['внучатый племянник','внучатая племянница','внучатого племянника','внучатой племянницы'],
+  vnUnc:['внучатый дядя','внучатая тётя','внучатого дяди','внучатой тёти'],
+  prNep:['праплемянник','праплемянница','праплемянника','праплемянницы'],
+  prUnc:['прапрадядя','прапрабабка','прапрадяди','прапрабабки']
+};
+const DEG = {2:['двоюродный','двоюродная','двоюродного','двоюродной'],3:['троюродный','троюродная','троюродного','троюродной'],4:['четвероюродный','четвероюродная','четвероюродного','четвероюродной'],5:['пятиюродный','пятиюродная','пятиюродного','пятиюродной']};
+
+function kinPick(pr, fem){ return {nom:pr[fem?1:0], gen:pr[fem?3:2]}; }
+function kinJoin(pre, base, i, j){ return {nom:pre[i]+' '+base.nom, gen:pre[j]+' '+base.gen}; }
+function kinGroupOf(id){ const i = people.get(id); return (i && !i.isSpouse && i.p.group) || null; }
+
+function kinNoun(dA, dB, fem, srcId, dstId){
+  if(dA===0){
+    const b = kinPick(dB===1?KN.child:dB===2?KN.grand:dB===3?KN.great:KN.ggreat, fem);
+    return kinGroupOf(dstId)==='adopted' ? kinJoin(['приёмный','приёмная','приёмного','приёмной'], b, fem?1:0, fem?3:2) : b;
+  }
+  if(dB===0){
+    const b = kinPick(dA===1?KN.parent:dA===2?KN.gpar:dA===3?KN.ggpar:KN.gggpar, fem);
+    return kinGroupOf(srcId)==='adopted' ? kinJoin(['приёмный','приёмная','приёмного','приёмной'], b, fem?1:0, fem?3:2) : b;
+  }
+  const m = Math.min(dA,dB), diff = Math.abs(dA-dB), deep = dB>dA;
+  let b;
+  if(m===1 && diff===0){
+    b = kinPick(KN.sib, fem);
+    if(kinGroupOf(srcId)!=='adopted' && kinGroupOf(dstId)!=='adopted'){
+      const pa = KIN.par.get(srcId)||[], pb = KIN.par.get(dstId)||[];
+      const shared = pa.filter(x=>pb.includes(x));
+      if(shared.length===1){
+        b = kinJoin(KIN.fem.get(shared[0]) ? ['единоутробный','единоутробная','единоутробного','единоутробной']
+                                          : ['единокровный','единокровная','единокровного','единокровной'], b, fem?1:0, fem?3:2);
+      }
+    }
+  }
+  else if(diff===0) b = kinPick(KN.sib, fem);
+  else if(diff===1) b = kinPick(deep?KN.nep:KN.unc, fem);
+  else if(diff===2) b = kinPick(deep?KN.vnNep:KN.vnUnc, fem);
+  else b = kinPick(deep?KN.prNep:KN.prUnc, fem);
+  if(m>=2) b = kinJoin(DEG[m], b, fem?1:0, fem?3:2);
+  return b;
+}
+
+function kinPath(src){
+  const dist = new Map([[src,0]]), prev = new Map(), q = [src];
+  while(q.length){
+    const x = q.shift(), nbs = [...(KIN.par.get(x)||[]), ...(KIN.kids.get(x)||[])];
+    for(const y of nbs) if(!dist.has(y)){ dist.set(y, dist.get(x)+1); prev.set(y, x); q.push(y); }
+  }
+  return {dist, prev};
+}
+function kinCore(aId, bId){
+  const {dist, prev} = kinPath(aId);
+  if(!dist.has(bId)) return null;
+  const path = [bId]; let cur = bId;
+  while(cur !== aId){ cur = prev.get(cur); path.push(cur); }
+  path.reverse();
+  let mca = path.length - 1;
+  for(let i=0;i<path.length-1;i++){
+    if((KIN.kids.get(path[i])||[]).includes(path[i+1])){ mca = i; break; }
+  }
+  return kinNoun(mca, path.length-1-mca, KIN.fem.get(bId), aId, bId);
+}
+function kinSpousePhrase(srcId, otherId, dist){
+  for(const [x,y] of KIN.marr){
+    if(x===srcId) continue;
+    if(y===otherId && dist.has(x)){ const c = kinCore(srcId,x); if(c) return (KIN.fem.get(otherId)?'жена ':'муж ') + c.gen; }
+    if(x===otherId && y!==srcId && dist.has(y)){ const c = kinCore(srcId,y); if(c) return (KIN.fem.get(otherId)?'жена ':'муж ') + c.gen; }
+  }
+  return null;
+}
+function kinChainPhrase(srcId, otherId, dist){
+  for(const [x,y] of KIN.marr){
+    if(y===otherId && dist.has(x)){ const c = kinCore(srcId,x); if(c) return c.nom + ' ' + (KIN.fem.get(otherId)?'её мужа':'его жены'); }
+    if(x===otherId && dist.has(y)){ const c = kinCore(srcId,y); if(c) return c.nom + ' ' + (KIN.fem.get(otherId)?'её жены':'его мужа'); }
+  }
+  return null;
+}
+function kinSharedSpouse(aId, bId){
+  const sa = KIN.marr.filter(p=>p[0]===aId||p[1]===aId).map(p=>p[0]===aId?p[1]:p[0]);
+  const sb = KIN.marr.filter(p=>p[0]===bId||p[1]===bId).map(p=>p[0]===bId?p[1]:p[0]);
+  return sa.some(x=>sb.includes(x));
+}
+function kinConnected(aId, bId){
+  const dist = new Map([[aId,0]]), q = [aId];
+  while(q.length){
+    const x = q.shift(), nbs = [...(KIN.par.get(x)||[]), ...(KIN.kids.get(x)||[]),
+      ...KIN.marr.filter(p=>p[0]===x).map(p=>p[1]), ...KIN.marr.filter(p=>p[1]===x).map(p=>p[0])];
+    for(const y of nbs) if(!dist.has(y)){ dist.set(y,1); q.push(y); }
+  }
+  return dist.has(bId);
+}
+function kinBetween(aId, bId){
+  if(aId===bId || !people.has(aId) || !people.has(bId)) return null;
+  const ep = KIN.marr.find(p=>p[2]==='eng'&&((p[0]===aId&&p[1]===bId)||(p[0]===bId&&p[1]===aId)));
+  if(ep){
+    const c1 = kinCore(aId,bId), c2 = kinCore(bId,aId);
+    return { bToA: (KIN.fem.get(bId)?'наречённая':'наречённый') + (c1?' · '+c1.nom:''),
+             aToB: (KIN.fem.get(aId)?'наречённая':'наречённый') + (c2?' · '+c2.nom:'') };
+  }
+  if(KIN.marr.some(p=>(p[0]===aId&&p[1]===bId)||(p[0]===bId&&p[1]===aId)))
+    return { bToA: KIN.fem.get(bId)?'супруга':'супруг', aToB: KIN.fem.get(aId)?'супруга':'супруг' };
+  const c1 = kinCore(aId, bId);
+  if(c1){ const c2 = kinCore(bId, aId); if(c2) return { bToA:c1.nom, aToB:c2.nom }; }
+  const dA = kinPath(aId).dist, dB = kinPath(bId).dist;
+  const bToA = kinSpousePhrase(aId, bId, dA) || kinChainPhrase(bId, aId, dB);
+  const aToB = kinSpousePhrase(bId, aId, dB) || kinChainPhrase(aId, bId, dA);
+  if(bToA && aToB) return {bToA, aToB};
+  if(kinSharedSpouse(aId, bId)){
+    const t = (KIN.fem.get(aId)&&KIN.fem.get(bId)) ? 'жёны одного мужа' : 'связаны брачным союзом';
+    return {bToA:t, aToB:t};
+  }
+  if(kinConnected(aId, bId)) return {bToA:'родня через брачные союзы рода', aToB:'родня через брачные союзы рода'};
+  return null;
+}
+let prevSelected = null;
+
+function openPanel(id){
+  const info = people.get(id), n = info.p, owner = info.owner;
+  const [kick, kcol] = kickerOf(id);
+  let html = '<button class="panel-close" aria-label="Закрыть">' +
+    '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>' +
+    '<div class="p-kicker" style="color:'+kcol+'">'+kick+'</div>' +
+    '<h2 class="p-name">'+n.name+'</h2>' +
+    '<div class="p-sub">'+n.years+(n.tag?' · '+n.tag:'')+(info.isSpouse?' · '+n.sub:'')+'</div>' +
+    (DEATHS[id] ? '<div class="p-death"><span class="pd-ic">†</span><span class="pd-body"><span class="pd-l">Причина смерти</span><span class="pd-t">'+DEATHS[id]+'</span></span></div>' : '') +
+    '<div class="p-div"></div>';
+
+  if(prevSelected && prevSelected!==id){
+    const kin = kinBetween(prevSelected, id);
+    if(kin){
+      const pn = people.get(prevSelected).p;
+      html += '<div class="kin-box"><div class="p-label" style="margin-bottom:8px">Родство</div>' +
+        '<div class="kin-row"><span class="kin-name">' + n.name + '</span><span class="kin-sep">—</span><span class="kin-rel">' + kin.bToA + '</span></div>' +
+        '<div class="kin-row"><span class="kin-name">' + pn.name + '</span><span class="kin-sep">—</span><span class="kin-rel">' + kin.aToB + '</span></div></div>';
+    }
+  }
+
+  const eng = ENGAGED.find(e=>e.a===owner.id||e.b===owner.id||e.a===id||e.b===id);
+  if(eng){
+    const oid = (eng.a===owner.id||eng.a===id) ? eng.b : eng.a;
+    const oi = people.get(oid);
+    if(oi) html += section('Помолвка', linkItem(oid, oi.p.name, oi.p.years + ' · ' + eng.note, colorOf(oid)));
+  }
+
+  const marria = [];
+  if(owner.spouse) marria.push(owner.spouse);
+  if(owner.prevSpouses) marria.push(...owner.prevSpouses);
+  if(marria.length){
+    html += section(info.isSpouse ? 'Союз' : (marria.length>1 ? 'Браки · '+marria.length : 'Брак / союз'),
+      marria.map(s=>linkItem(s.id, s.name, s.years, colorOf(s.id))).join(''));
+  }
+  if(!info.isSpouse && parentOf.has(id)){
+    const par = parentOf.get(id);
+    let inner = linkItem(par.id, par.name, par.years, colorOf(par.id));
+    const byId = ('by' in info.p) ? info.p.by : (par.spouse ? par.spouse.id : null);
+    const by = byId ? people.get(byId) : null;
+    if(by) inner += linkItem(by.p.id, by.p.name, by.p.years, colorOf(by.p.id));
+    html += section('Родители', inner);
+  }
+  if(owner.children && owner.children.length){
+    html += section('Дети · ' + owner.children.length,
+      owner.children.map(c => linkItem(c.id, c.name, c.years + (c.tag?' · '+c.tag:''), colorOf(c.id))).join(''));
+  }
+  const sibs = (!info.isSpouse && parentOf.has(id))
+    ? parentOf.get(id).children.filter(x=>x.id!==id) : [];
+  if(sibs.length){
+    html += section('Братья и сёстры · ' + sibs.length,
+      sibs.map(c => linkItem(c.id, c.name, c.years, colorOf(c.id))).join(''));
+  }
+  /* супруга с родовым кланом: показываем её родителей и родных братьев */
+  if(info.isSpouse && n.clan){
+    const cpar = (n.clan.children||[])[0];
+    if(cpar){
+      const cpars = [cpar, ...(cpar.spouse?[cpar.spouse]:[])];
+      html += section('Родители', cpars.map(p => linkItem(p.id, p.name, p.years, colorOf(p.id))).join(''));
+      const csibs = (cpar.children||[]).filter(x=>x.id!==id);
+      if(csibs.length) html += section('Братья и сёстры · ' + csibs.length,
+        csibs.map(c => linkItem(c.id, c.name, c.years, colorOf(c.id))).join(''));
+    }
+  }
+  const notes = info.isSpouse ? (n.note ? [n.note] : []) : (Array.isArray(n.note) ? n.note : (n.note ? [n.note] : []));
+  if(notes.length){
+    const label = id==='william' ? 'Летопись'
+      : (rootOf.get(id) && rootOf.get(id) !== TREE) ? 'Летопись династии'
+      : (id==='kadas'||id==='ofelia') ? 'Династия'
+      : (id==='leonard') ? 'Справки Леонарда'
+      : 'Из летописи';
+    html += section(label, notes.map(t=>'<p class="p-note">'+t+'</p>').join(''));
+  } else {
+    html += section('Из летописи', '<p class="p-note">Летопись ещё не написана. Время покажет.</p>');
+  }
+  if(id==='william'){
+    html += section('Завещание роду', '<p class="p-note" style="color:var(--accent)">'+WILLIAM_TESTAMENT+'</p>');
+    html += section('Идея Сильнейшего', '<p class="p-note">'+IDEA_NOTE+'</p>');
+    html += '<div class="p-section" id="pTop"><div class="p-label">Топ достижений мирового масштаба</div>' +
+      '<div class="top-box">' +
+      TOP_ACHIEVEMENTS.map((a,i)=>
+        '<div class="top-item"><div class="top-rank'+(i===1?' r2':i===2?' r3':'')+'">'+(i+1)+'</div>' +
+        '<div class="top-body"><div class="top-name'+(a.id?' lnk':'')+'"'+(a.id?' data-goto="'+a.id+'" title="Открыть карточку — древо развернётся к персонажу"':'')+'>'+a.who+'</div><div class="top-who">'+a.title+'</div>' +
+        '<div class="top-text">'+a.text+'</div></div></div>').join('') +
+      '<div class="top-item"><div class="top-rank top-rank-x">◆</div><div class="top-body">' +
+        '<div class="top-name">Хамстер Закатной</div><div class="top-who">особая отметка · не из рода</div>' +
+        '<div class="top-text">Силой взял Квилиану Зенскую в жёны и зачал наследника — Совет Прониаров выдвинул его главным претендентом на новый Дукат. Именно его ход отодвинул Альфрея Мерса и перевернул расстановку сил в Яльве.</div></div></div>' +
+      '</div></div>';
+  }
+  html += '<button class="p-locate" id="pLocate">' +
+    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>' +
+    'Показать в древе</button>';
+
+  const panel = $('#panel');
+  panel.innerHTML = html;
+  panel.classList.add('open');
+  panel.querySelector('.panel-close').addEventListener('click', deselect);
+  $('#pLocate').addEventListener('click', ()=> goToPerson(id));
+}
+
+function select(id){ if(selected && selected!==id) prevSelected = selected; selected = id; applyHighlight(); openPanel(id); }
+function deselect(){
+  if(!selected && !$('#panel').classList.contains('open')) return;
+  selected = null; applyHighlight();
+  $('#panel').classList.remove('open');
+}
+ $('#panel').addEventListener('click', e=>{
+  const b = e.target.closest('[data-goto]');
+  if(b) goToPerson(b.dataset.goto);
+});
+ $('#btnFounder').addEventListener('click', ()=> goToPerson('william'));
+ $('#btnTop').addEventListener('click', ()=>{
+  goToPerson('william');
+  requestAnimationFrame(()=>{ const box = document.getElementById('pTop'); if(box) box.scrollIntoView({behavior:'smooth', block:'start'}); });
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') deselect(); });
+
+function goToPerson(id){
+  const owner = people.get(id).owner;
+  let cur = owner;
+  while(parentOf.has(cur.id)){ collapsed.delete(parentOf.get(cur.id).id); cur = parentOf.get(cur.id); }
+  /* член династии-клана: раскрываем также основную ветку от супруги-якоря */
+  const rt = rootOf.get(cur.id);
+  if(rt && rt !== TREE && rt.anchor){
+    let up = people.get(rt.anchor).owner;
+    while(parentOf.has(up.id)){ collapsed.delete(parentOf.get(up.id).id); up = parentOf.get(up.id); }
+  }
+  const target = computeLayout();
+  reveal(target, true);
+  select(id);
+  const p = target.pos.get(id);
+  if(p) centerOn(p);
+}
+
+/* ═══════════ 9. МАСШТАБ И ПАНОРАМА ═══════════ */
+
+zSlider = $('#zSlider'); zValEl = $('#zVal');
+
+function zoomAtPoint(px, py, f, anim){
+  const k = clamp(view.k*f, KMIN, KMAX);
+  const t = {k, x:px-(px-view.x)*(k/view.k), y:py-(py-view.y)*(k/view.k)};
+  if(anim) tweenView(t, 360); else { cancelAnimationFrame(viewRaf); view=t; applyView(); }
+}
+function zoomCenter(f){
+  const r = viewport.getBoundingClientRect();
+  zoomAtPoint(r.width/2, r.height/2, f, true);
+}
+ $('#zIn').addEventListener('click', ()=>zoomCenter(1.35));
+ $('#zOut').addEventListener('click', ()=>zoomCenter(1/1.35));
+ $('#zFit').addEventListener('click', ()=>fitView(true));
+
+/* ползунок масштаба — лог-шкала, зум к центру экрана */
+zSlider.addEventListener('input', ()=>{
+  zSlideLock = true;
+  const r = viewport.getBoundingClientRect();
+  const k = KMIN*Math.exp((+zSlider.value)/1000*LOGK);
+  zoomAtPoint(r.width/2, r.height/2, k/view.k, false);
+  zValEl.textContent = Math.round(view.k*100)+'%';
+  zSlideLock = false;
+});
+
+viewport.addEventListener('wheel', e=>{
+  e.preventDefault();
+  const r = viewport.getBoundingClientRect();
+  const px = e.clientX-r.left, py = e.clientY-r.top;
+  let dy = e.deltaY;
+  if(e.deltaMode===1) dy *= 24; else if(e.deltaMode===2) dy *= r.height;
+  zoomAtPoint(px, py, Math.exp(-dy*.0014), false);
+},{passive:false});
+
+viewport.addEventListener('dblclick', e=>{
+  if(lastPtrType !== 'mouse') return;
+  const r = viewport.getBoundingClientRect();
+  zoomAtPoint(e.clientX-r.left, e.clientY-r.top, 1.7, true);
+});
+
+/* щипок трекпада (Safari) не масштабирует страницу над полотном */
+['gesturestart','gesturechange','gestureend'].forEach(ev=> viewport.addEventListener(ev, e=>e.preventDefault()));
+
+/* --- касания: пан одним пальцем, щипок двумя, двойное касание --- */
+const ptrs = new Map();
+let single = null, pinch = null, gestPinch = false;
+let lastPtrType = 'mouse';
+let lastTap = {t:0, x:0, y:0};
+
+viewport.addEventListener('pointerdown', e=>{
+  lastPtrType = e.pointerType || 'mouse';
+  if(e.pointerType==='mouse' && e.button!==0) return;
+  cancelAnimationFrame(viewRaf);
+  const r = viewport.getBoundingClientRect();
+  const p = {x:e.clientX-r.left, y:e.clientY-r.top};
+  ptrs.set(e.pointerId, p);
+  if(ptrs.size===1){
+    single = {x:p.x, y:p.y, vx:view.x, vy:view.y, moved:false};
+  } else if(ptrs.size===2){
+    single = null; gestPinch = true;
+    const [a,b] = [...ptrs.values()];
+    pinch = {d0:Math.hypot(a.x-b.x,a.y-b.y)||1, k0:view.k,
+             mx0:(a.x+b.x)/2, my0:(a.y+b.y)/2, vx0:view.x, vy0:view.y};
+    try{ viewport.setPointerCapture(e.pointerId); }catch(_){}
+  }
+});
+
+viewport.addEventListener('pointermove', e=>{
+  const p = ptrs.get(e.pointerId); if(!p) return;
+  const r = viewport.getBoundingClientRect();
+  p.x = e.clientX-r.left; p.y = e.clientY-r.top;
+  if(pinch && ptrs.size>=2){
+    e.preventDefault();
+    const [a,b] = [...ptrs.values()];
+    const k = clamp(pinch.k0*(Math.hypot(a.x-b.x,a.y-b.y)/pinch.d0), KMIN, KMAX);
+    const cx = (pinch.mx0-pinch.vx0)/pinch.k0, cy = (pinch.my0-pinch.vy0)/pinch.k0;
+    const mx = (a.x+b.x)/2, my = (a.y+b.y)/2;
+    view.k = k; view.x = mx-cx*k; view.y = my-cy*k;
+    applyView();
+  } else if(single && ptrs.size===1){
+    const dx = p.x-single.x, dy = p.y-single.y;
+    if(!single.moved && Math.hypot(dx,dy)>6){
+      single.moved = true;
+      viewport.classList.add('grabbing');
+      try{ viewport.setPointerCapture(e.pointerId); }catch(_){}
+    }
+    if(single.moved){
+      e.preventDefault(); /* никакого выделения текста при перетаскивании */
+      view.x = single.vx+dx; view.y = single.vy+dy; applyView();
+    }
+  }
+});
+
+function endPointer(e){
+  if(!ptrs.delete(e.pointerId)) return;
+  if(pinch && ptrs.size<2){
+    pinch = null;
+    const rest = [...ptrs.values()][0];
+    if(rest) single = {x:rest.x, y:rest.y, vx:view.x, vy:view.y, moved:true};
+  }
+  if(ptrs.size===0){
+    viewport.classList.remove('grabbing');
+    const wasPinch = gestPinch; gestPinch = false;
+    if(single && !single.moved && !wasPinch){
+      const now = Date.now();
+      const dbl = (now-lastTap.t)<340 && Math.hypot(e.clientX-lastTap.x, e.clientY-lastTap.y)<32;
+      lastTap = {t:now, x:e.clientX, y:e.clientY};
+      const card = e.target.closest('.card');
+      const chip = e.target.closest('.chip');
+      if(dbl){
+        if(!chip){
+          const r = viewport.getBoundingClientRect();
+          zoomAtPoint(e.clientX-r.left, e.clientY-r.top, 1.8, true);
+        }
+      } else if(card){
+        const node = card.closest('.node');
+        if(node) select(node.dataset.id);
+      } else if(chip){
+        toggleBranch(chip.dataset.for);
+      } else deselect();
+    }
+    single = null;
+  }
+}
+viewport.addEventListener('pointerup', endPointer);
+viewport.addEventListener('pointercancel', endPointer);
+
+/* тап по гербу на телефоне — летопись основателя */
+$('.brand').addEventListener('click', ()=>{
+  if(matchMedia('(max-width:760px)').matches) goToPerson('william');
+});
+
+/* кнопка легенды на телефоне */
+$('#legendToggle').addEventListener('click', ()=> $('#legend').classList.toggle('open'));
+document.addEventListener('click', e=>{
+  if(e.target.closest && !e.target.closest('#legend') && !e.target.closest('#legendToggle')) $('#legend').classList.remove('open');
+});
+
+/* шторка панели на телефоне: потянуть вниз — закрыть */
+(function(){
+  const panel = $('#panel');
+  const isMobile = ()=> matchMedia('(max-width:760px)').matches;
+  let sy = 0, dy = 0, drag = false;
+  panel.addEventListener('pointerdown', e=>{
+    if(!isMobile() || !panel.classList.contains('open')) return;
+    if(e.target.closest('.p-link,.panel-close,.p-locate')) return;
+    const r = panel.getBoundingClientRect();
+    if(e.clientY - r.top > 34) return;
+    drag = true; sy = e.clientY; dy = 0;
+    panel.style.transition = 'none';
+    try{ panel.setPointerCapture(e.pointerId); }catch(_){}
+  });
+  panel.addEventListener('pointermove', e=>{
+    if(!drag) return;
+    dy = Math.max(0, e.clientY - sy);
+    panel.style.transform = 'translateY('+dy+'px)';
+  });
+  const fin = ()=>{
+    if(!drag) return;
+    drag = false;
+    panel.style.transition = ''; panel.style.transform = '';
+    if(dy > 90) deselect();
+  };
+  panel.addEventListener('pointerup', fin);
+  panel.addEventListener('pointercancel', fin);
+})();
+
+/* ═══════════ 10. ПОИСК ═══════════ */
+
+const searchInput = $('#search'), drop = $('#searchDrop');
+const INDEX = [...people.values()].map(info => ({
+  id: info.p.id,
+  name: info.p.name,
+  meta: (info.isSpouse ? info.p.sub : (info.p.tag || GROUPS[info.owner.group].name)) + ' · ' + info.p.years,
+  color: colorOf(info.p.id)
+}));
+
+function goSearch(id){
+  drop.classList.remove('open');
+  searchInput.value=''; searchInput.blur();
+  goToPerson(id);
+}
+let sActive = -1;
+const sItems = () => [...drop.querySelectorAll('.s-item')];
+function sMark(){
+  sItems().forEach((el,i)=>el.classList.toggle('active', i===sActive));
+}
+searchInput.addEventListener('input', ()=>{
+  const q = searchInput.value.trim().toLowerCase();
+  sActive = -1;
+  if(q.length<2){ drop.classList.remove('open'); return; }
+  const res = INDEX.filter(p=>p.name.toLowerCase().includes(q));
+  /* лучшие совпадения выше: имя начинается с запроса, затем совпадение с начала слова */
+  res.sort((a,b)=>{
+    const an=a.name.toLowerCase(), bn=b.name.toLowerCase();
+    const rank=s => s.startsWith(q) ? 0 : s.includes(' '+q) ? 1 : 2;
+    return rank(an)-rank(bn);
+  });
+  const top = res.slice(0,8);
+  drop.innerHTML = top.length
+    ? top.map(p=>'<button class="s-item" data-id="'+p.id+'">' +
+        '<span class="s-dot" style="background:'+p.color+'"></span>' +
+        '<span class="s-name">'+p.name+'</span>' +
+        '<span class="s-meta">'+p.meta+'</span></button>').join('')
+    : '<div class="s-empty">Ничего не найдено</div>';
+  drop.classList.add('open');
+});
+drop.addEventListener('click', e=>{
+  const b = e.target.closest('[data-id]');
+  if(b) goSearch(b.dataset.id);
+});
+searchInput.addEventListener('keydown', e=>{
+  const items = sItems();
+  if(e.key==='ArrowDown' || e.key==='ArrowUp'){
+    if(!items.length) return;
+    e.preventDefault();
+    sActive = e.key==='ArrowDown' ? Math.min(items.length-1, sActive+1) : Math.max(0, sActive-1);
+    sMark();
+  }
+  if(e.key==='Enter'){ const f = items[sActive>=0?sActive:0]; if(f) goSearch(f.dataset.id); }
+  if(e.key==='Escape'){ drop.classList.remove('open'); searchInput.blur(); }
+});
+document.addEventListener('click', e=>{
+  if(!e.target.closest('.search-wrap')) drop.classList.remove('open');
+});
+
+/* ═══════════ 11. ЗАПУСК ═══════════ */
+
+(function init(){
+  const target = computeLayout();
+  curPos = target.pos;
+  for(const [id,el] of cardEls) el.style.display = target.pos.has(id) ? '' : 'none';
+  rebuildSvg(target);
+  renderFrame();
+  fitView(false);
+  syncExpandBtn();
+
+  requestAnimationFrame(()=>{
+    svgEl.querySelectorAll('.ln:not(.stub)').forEach(p=>{
+      const L = p.getTotalLength();
+      p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+      p.animate([{strokeDashoffset:L},{strokeDashoffset:0}],
+        {duration:650, delay:120+Math.random()*350, easing:'cubic-bezier(.45,0,.2,1)', fill:'both'});
+    });
+    let i = 0;
+    cardEls.forEach(el=>{
+      el.firstChild.style.transitionDelay = (160 + i*12) + 'ms';
+      el.firstChild.classList.remove('pre');
+      i++;
+    });
+    setTimeout(()=>{
+      cardEls.forEach(el=>{ el.firstChild.style.transitionDelay=''; });
+      svgEl.querySelectorAll('.ln').forEach(p=>{ p.style.strokeDasharray=''; p.style.strokeDashoffset=''; });
+      chipEls.forEach(c=>c.classList.remove('pre'));
+      document.querySelectorAll('.late').forEach(el=>el.classList.remove('late'));
+    }, 2600);
+  });
+})();
+</script>
+</body>
+</html>
